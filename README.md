@@ -13,3 +13,4 @@ Questions/to do's:
 2. Remote assessments in the 2-year and 4-year follow-up protocols used a Flanker task using the Inquisit system from Millisecond. This task was designed to mimic the NIH Toolbox Flanker task as closely as possible, but should I keep the test?
 3. I must find a way to exclude the subjects that did not take part in measurements 2 and 3.
 4. Is the MCAR test useful to address the missing data?
+5. Find a way to summarise/visualise each columns values (to see how many are not available).
