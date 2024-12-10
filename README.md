@@ -15,7 +15,7 @@ Questions/to do's:
 2. I must find a way to exclude the subjects that did not take part in measurements 2 and 3 (do I though?)
 3. I should test/look up the little man task
 4. Maybe the file nc_y_flkr has more answers (on the millisecond task), I get an error though. It is only in times 2 and 3, so it is still useless but has mean response times for some versions of the task) 
-5. WISC has no wm tests
-6. 	tfmri_nb_all_beh_c0b_mrt=Average reaction time for all correct responses to 0 back stimuli during run 1 and run 2
-7. 	tfmri_nb_all_beh_c2b_mrt=Average reaction time for all correct responses to 2 back stimuli during run 1 and run 2	
+6. tfmri_nb_all_beh_c0b_mrt=Average reaction time for all correct responses to 0 back stimuli during run 1 and run 2
+7. tfmri_nb_all_beh_c2b_mrt=Average reaction time for all correct responses to 2 back stimuli during run 1 and run 2	
 8. Maybe check flankers for other score types? like computed?
+9. I will read the flanker manual but we will go for the uncorrected 
