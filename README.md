@@ -18,3 +18,4 @@ Questions/to do's:
 5. WISC has no wm tests
 6. 	tfmri_nb_all_beh_c0b_mrt=Average reaction time for all correct responses to 0 back stimuli during run 1 and run 2
 7. 	tfmri_nb_all_beh_c2b_mrt=Average reaction time for all correct responses to 2 back stimuli during run 1 and run 2	
+8. Maybe check flankers for other score types? like computed?
