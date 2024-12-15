@@ -13,7 +13,7 @@ the Little man task was also administered in baseline, 2nd and 4th year, but: wh
 Questions/to do's: 
 1. Remote assessments in the 2-year and 4-year follow-up protocols used a Flanker task using the Inquisit system from Millisecond. This task was designed to mimic the NIH Toolbox Flanker task as closely as possible, but should I keep the test?
 2. I must find a way to exclude the subjects that did not take part in measurements 2 and 3 (do I though?)
-3. I should test/look up the little man task
+3. Testing little man: not great correlation between timepoints, esp 1-2 (.016), but 1-3 was good (.47). Generally weird to plot. 
 
 
 Steps done:
