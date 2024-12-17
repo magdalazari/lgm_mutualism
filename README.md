@@ -1,22 +1,28 @@
-Data from: ABCD cognition -> NIH Toolbox (5 administered at baseline, 2nd and 4th year, all of them were administered in English)
-Tests included: 
+Data from: 
+A. ABCD neurocognition (Shared\abcd-data-release-5.1\core\neurocognition\nc_y_nihtb) -> NIH Toolbox (5 tests administered at baseline, 2nd and 4th year, all of them administered in English). Included: 
 1. Picture Vocabulary (component of the Crystallized Composite Score)
 2. Flanker Inhibitory Control & Attention (component of the Fluid Composite Score) (remote assessments used a replicated Flanker task -Inquisit platform-)
 3. Picture Sequence Memory (component of the Fluid Composite Score)
 4. Pattern Comparison Processing Speed (component of the Fluid Composite Score)
 5. Oral Reading Recognition (component of the Crystallized Composite Score)
 
-6. Number of participants included/event: baseline: 11868, 2-year follow-up:	10973, 4-year follow-up: 4754.
-
-the Little man task was also administered in baseline, 2nd and 4th year, but: when administered in the baseline assessment a customized program designed by ABCD was used, whereas the 2-year and 4-year follow-up assessments a task presented in the Inquisit system from Millisecond was used. 
-
-Questions/to do's: 
-1. Remote assessments in the 2-year and 4-year follow-up protocols used a Flanker task using the Inquisit system from Millisecond. This task was designed to mimic the NIH Toolbox Flanker task as closely as possible, but should I keep the test?
-2. I must find a way to exclude the subjects that did not take part in measurements 2 and 3 (do I though?)
-3. Testing little man: not great correlation between timepoints, esp 1-2 (.016), but 1-3 was good (.47). Generally weird to plot. 
+B. ABCD imaging (Shared\abcd-data-release-5.1\core\imaging\mri_y_tfmr_nback_beh_workingmem- tfmri_nb_all_beh_ctotal_rate)
+Rate of correct responses in fMRI working memory task 
 
 
-Steps done:
-1. Compared 3 wm tasks (rate of correct responses, tfmri_nb_all_beh_c0b_mrt (=Average reaction time for all correct responses to 0 back stimuli during run 1 and run 2), tfmri_nb_all_beh_c2b_mrt (=Average reaction time for all correct responses to 2 back stimuli during run 1 and run 2) to List from NIHtb and ravens matrices and the highest correlations were between rate of correct response (0.36).
-2. Figured out scoring for the Flanker test (raw uses only accuray, uncorrected includes rt for people scoring more than 80%).
+Number of participants included/event: baseline: 11868, 2-year follow-up:	10973, 4-year follow-up: 4754.
 
+
+Notes:
+-the Little man task was also administered in baseline, 2nd and 4th year, but: when administered in the baseline assessment a customized program designed by ABCD was used, whereas in (all) the 2-year and 4-year follow-up assessments a task presented in the Inquisit system from Millisecond was used. Testing: not great correlation between timepoints, esp 1-2 (.016), but 1-3 was good (.47). Generally weird to plot.
+
+-Remote assessments in the 2-year and 4-year follow-up protocols used a Flanker task using the Inquisit system from Millisecond. This task was designed to mimic the NIH Toolbox Flanker task as closely as possible.
+
+
+Data cleaning steps/notes:
+1. Only 3 tests had raw scores available, so checked for the correlations between raw and uncorrected (the 2 types that ABCD recommends) at T_1.
+results: picture: 0.97, pattern: 0.99, flanker: 0.35 (because raw uses only accuray, uncorrected includes rt for people scoring more than 80%, mentioned in manual and obvious when plotted, since 80% of 40 trials = 32 correct responses.
+If 20 correct responses are "guaranteed" (not included in the raw score) the remaining 12 (32 - 20) becomes the point at which the uncorrected score starts incorporating reaction times for accuracy higher than 80%, as participants have a baseline of 20 correct answers, so achieving 80% accuracy (32 correct) requires 12 additional correct responses, and this cutoff reflects on the graph, where 12 on the raw score axis aligns with the transition where reaction time likely starts influencing scores, Once you achieve the 12 additional correct answers (so hit 80% accuracy), reaction times start being factored into the score (which adds new types of variation)
+
+2. Compared 3 wm tasks (tfmri_nb_all_beh_ctotal_rate(=rate of correct responses), tfmri_nb_all_beh_c0b_mrt (=Average reaction time for all correct responses to 0 back stimuli during run 1 and run 2), tfmri_nb_all_beh_c2b_mrt (=Average reaction time for all correct responses to 2 back stimuli during run 1 and run 2) to List from NIHtb and ravens matrices and the highest correlations were between rate of correct response for both list and WISC (0.36), so this measure was selected.
+3. NDAR_INVA31C7WYJ was an outlier (180) in T_2 reading, but the rest of their scores looked normal, so I replaced with NA. 
