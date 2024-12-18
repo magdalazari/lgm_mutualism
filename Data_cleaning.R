@@ -58,42 +58,68 @@ cor(cor_pattern, use='pairwise.complete.obs')
 #########Uncorrected##########
 
 #Subsetting uncorrected scores 
-uncorrected_scores_tb<- 
+uncorrected_scores<- 
   data_raw_all %>% 
   select(matches("src_subject_id|eventname|uncorrected")) %>%
   select(!c(nihtbx_list_uncorrected, nihtbx_cardsort_uncorrected,nihtbx_fluidcomp_uncorrected,nihtbx_cryst_uncorrected,nihtbx_totalcomp_uncorrected))
 
 
+uncorrected_scores<- uncorrected_scores%>%
+  mutate(eventname = case_when(
+    eventname == "baseline_year_1_arm_1" ~ "T_1",
+    eventname == "2_year_follow_up_y_arm_1" ~ "T_2",
+    eventname == "4_year_follow_up_y_arm_1" ~ "T_3"))
+
+
+###Handling outlier for reading (noticed in spaghetti plot)
+
+#how much is the max value? 180
+max(reading_uncorrected_wide$reading_uncorrected.T_2, na.rm = T)
+
+
+#how many standard deviations above the mean is the max value? 12.62135
+max(scale(reading_uncorrected_wide$reading_uncorrected.T_2), na.rm=T)
+
+
+#where is the (first) maximum value? 3782 (not correct?)
+which.max(reading_uncorrected_wide$reading_uncorrected.T_2)
+
+#Removing outlier from first dataframe 
+
+uncorrected_scores[uncorrected_scores==180]<-NA
+
+
+
 ###Number of NA
 
 #picture seq
-uncorrected_scores_tb %>% 
+uncorrected_scores %>% 
   group_by(eventname) %>% 
   summarise(across(nihtbx_picture_uncorrected, ~sum(is.na(.))))
 
 #picture vocabulary 
-uncorrected_scores_tb %>% 
+uncorrected_scores %>% 
   group_by(eventname) %>% 
   summarise(across(nihtbx_picvocab_uncorrected, ~sum(is.na(.))))
 
 #flanker
-uncorrected_scores_tb %>% 
+uncorrected_scores %>% 
   group_by(eventname) %>% 
   summarise(across(nihtbx_flanker_uncorrected, ~sum(is.na(.))))
 
 #reading
-uncorrected_scores_tb %>% 
+uncorrected_scores %>% 
   group_by(eventname) %>% 
   summarise(across(nihtbx_reading_uncorrected, ~sum(is.na(.))))
 
 #pattern
-uncorrected_scores_tb %>% 
+uncorrected_scores %>% 
   group_by(eventname) %>% 
   summarise(across(nihtbx_pattern_uncorrected, ~sum(is.na(.))))
 
 
 ### Percentage of NA 
-uncorrected_scores_tb %>% 
+uncorrected_scores %>% 
 group_by(eventname) %>% 
 summarise(across(c(nihtbx_picture_uncorrected, nihtbx_picvocab_uncorrected, nihtbx_flanker_uncorrected, nihtbx_reading_uncorrected, nihtbx_pattern_uncorrected), 
 ~ sum(is.na(.)) / n() * 100))
@@ -107,18 +133,12 @@ summarise(m = mean(Sepal.Length, na.rm = T), n = n(), count_missing = sum(logi_m
 
 
 #visualizing NA  
-vis_dat(uncorrected_scores_tb, warn_large_data= FALSE) 
+vis_dat(uncorrected_scores, warn_large_data= FALSE) 
 
 
 
-#Subsetting and renaming columns 
+#Renaming columns for raw and flanker (not useful anymore)
 
-#changing eventname labels (will do after I merge the datasets)
-#uncorrected_scores <- uncorrected_scores %>%
- # mutate(eventname = case_when(
-   # eventname == "baseline_year_1_arm_1" ~ "T_1",
-    #eventname == "2_year_follow_up_y_arm_1" ~ "T_2",
-   # eventname == "4_year_follow_up_y_arm_1" ~ "T_3"))
 
 data_raw <- data_raw %>%
   mutate(eventname = case_when(
@@ -136,66 +156,67 @@ flanker_raw<- flanker_raw%>%
 
 #Picture Vocabulary 
 
-picvocab_uncorrected<-data.frame(uncorrected_scores_tb$src_subject_id, uncorrected_scores$eventname, uncorrected_scores$nihtbx_picvocab_uncorrected)
+picvocab_uncorrected<-data.frame(uncorrected_scores$src_subject_id, uncorrected_scores$eventname, uncorrected_scores$nihtbx_picvocab_uncorrected)
 colnames(picvocab_uncorrected)<-c('ID','eventname','picvocab_uncorrected')
 
 #Flanker 
 
-flanker_uncorrected<-data.frame(uncorrected_scores_tb$src_subject_id, uncorrected_scores$eventname, uncorrected_scores$nihtbx_flanker_uncorrected)
+flanker_uncorrected<-data.frame(uncorrected_scores$src_subject_id, uncorrected_scores$eventname, uncorrected_scores$nihtbx_flanker_uncorrected)
 colnames(flanker_uncorrected)<-c('ID','eventname','flanker_uncorrected')
 
 #Pattern 
 
-pattern_uncorrected<-data.frame(uncorrected_scores_tb$src_subject_id, uncorrected_scores$eventname, uncorrected_scores$nihtbx_pattern_uncorrected)
+pattern_uncorrected<-data.frame(uncorrected_scores$src_subject_id, uncorrected_scores$eventname, uncorrected_scores$nihtbx_pattern_uncorrected)
 colnames(pattern_uncorrected)<-c('ID','eventname','pattern_uncorrected')
 
 #Picture 
 
-picture_uncorrected<-data.frame(uncorrected_scores_tb$src_subject_id, uncorrected_scores$eventname, uncorrected_scores$nihtbx_picture_uncorrected)
+picture_uncorrected<-data.frame(uncorrected_scores$src_subject_id, uncorrected_scores$eventname, uncorrected_scores$nihtbx_picture_uncorrected)
 colnames(picture_uncorrected)<-c('ID','eventname','picture_uncorrected')
 
 #Reading 
-reading_uncorrected<-data.frame(uncorrected_scores_tb$src_subject_id, uncorrected_scores$eventname, uncorrected_scores$nihtbx_reading_uncorrected)
+reading_uncorrected<-data.frame(uncorrected_scores$src_subject_id, uncorrected_scores$eventname, uncorrected_scores$nihtbx_reading_uncorrected)
 colnames(reading_uncorrected)<-c('ID','eventname','reading_uncorrected')
 
 
 #Spaghetti plot for each task 
 
 #Picture vocabulary 
-ggplot(picvocab_uncorrected_tb,aes(eventname,picvocab_uncorrected, group=ID))+
-  geom_point(alpha=0.5)+
+ggplot(picvocab_uncorrected,aes(eventname,picvocab_uncorrected, group=ID))+
+  geom_point(alpha=0.3, col='darkgreen')+
   geom_line(alpha=0.5)+
   labs(x='Eventname', y='Picture Vocabulary Score')
 
 #Flanker 
-ggplot(flanker_uncorrected_tb,aes(eventname,flanker_uncorrected, group=ID))+
-  geom_point(alpha=0.5)+
+ggplot(flanker_uncorrected,aes(eventname,flanker_uncorrected, group=ID))+
+  geom_point(alpha=0.3, colour="red")+
   geom_line(alpha=0.5)+
   labs(x='Eventname', y='Flanker Score')
 
 #Pattern
-ggplot(pattern_uncorrected_tb,aes(eventname,pattern_uncorrected, group=ID))+
-  geom_point(alpha=0.5)+
+ggplot(pattern_uncorrected,aes(eventname,pattern_uncorrected, group=ID))+
+  geom_point(alpha=0.3, colour="orange")+
   geom_line(alpha=0.5)+
   labs(x='Eventname', y='Pattern Score')
 
 #Picture
-ggplot(picture_uncorrected_tb,aes(eventname,picture_uncorrected, group=ID))+
-  geom_point(alpha=0.5)+
+ggplot(picture_uncorrected,aes(eventname,picture_uncorrected, group=ID))+
+  geom_point(alpha=0.3, colour="darkred")+
   geom_line(alpha=0.5)+
   labs(x='Eventname', y='Picture Score')
 
-#Reading
-ggplot(reading_uncorrected_tb,aes(eventname,reading_uncorrected, group=ID))+
-  geom_point(alpha=0.5)+
+#Reading (looks linear without the outlier)
+ggplot(reading_uncorrected,aes(eventname,reading_uncorrected, group=ID))+
+  geom_point(alpha=0.3, colour="green")+
   geom_line(alpha=0.5)+
   labs(x='Eventname', y='Reading Score')
+
 
 #Raincloud plots 
 
 #Picture  vocabulary
 
-ggplot(uncorrected_scores_tb, aes(1, nihtbx_picvocab_uncorrected, fill = eventname, color = eventname)) +
+ggplot(uncorrected_scores, aes(1, nihtbx_picvocab_uncorrected, fill = eventname, color = eventname)) +
   geom_rain(alpha = .5, rain.side = 'l', #flipping plot to left
             boxplot.args = list(color = "black", outlier.shape = NA),
             boxplot.args.pos = list( #nudging boxplots so that they dont overlap
@@ -206,7 +227,7 @@ ggplot(uncorrected_scores_tb, aes(1, nihtbx_picvocab_uncorrected, fill = eventna
   scale_color_brewer(palette = 'Dark2') 
 
 #comparing timepoints side by side (no overlapping)
-ggplot(uncorrected_scores_tb, aes(eventname, nihtbx_picvocab_uncorrected, fill = eventname)) +
+ggplot(uncorrected_scores, aes(eventname, nihtbx_picvocab_uncorrected, fill = eventname)) +
   geom_rain(alpha = .5, 
           boxplot.args.pos = list( #making them less crammed 
             width = 0.05, position = position_nudge(x = 0.13)),
@@ -220,7 +241,7 @@ ggplot(uncorrected_scores_tb, aes(eventname, nihtbx_picvocab_uncorrected, fill =
   coord_flip()
 
 #Flanker (looks weird at T_2 and T_3)
-ggplot(uncorrected_scores_tb, aes(eventname, nihtbx_flanker_uncorrected, fill = eventname)) +
+ggplot(uncorrected_scores, aes(eventname, nihtbx_flanker_uncorrected, fill = eventname)) +
   geom_rain(alpha = .5, 
             boxplot.args.pos = list(  
               width = 0.05, position = position_nudge(x = 0.13)),
@@ -235,7 +256,7 @@ ggplot(uncorrected_scores_tb, aes(eventname, nihtbx_flanker_uncorrected, fill = 
   coord_flip()
 
 #Pattern (looks ok)
-ggplot(uncorrected_scores_tb, aes(eventname, nihtbx_pattern_uncorrected, fill = eventname)) +
+ggplot(uncorrected_scores, aes(eventname, nihtbx_pattern_uncorrected, fill = eventname)) +
   geom_rain(alpha = .5, 
             boxplot.args.pos = list(  
               width = 0.05, position = position_nudge(x = 0.13)),
@@ -250,7 +271,7 @@ ggplot(uncorrected_scores_tb, aes(eventname, nihtbx_pattern_uncorrected, fill = 
 
 
 #Picture (ceiling effects in T_3?)
-ggplot(uncorrected_scores_tb, aes(eventname, nihtbx_picture_uncorrected, fill = eventname)) +
+ggplot(uncorrected_scores, aes(eventname, nihtbx_picture_uncorrected, fill = eventname)) +
   geom_rain(alpha = .5, 
             boxplot.args.pos = list( 
               width = 0.05, position = position_nudge(x = 0.13)),
@@ -264,8 +285,8 @@ ggplot(uncorrected_scores_tb, aes(eventname, nihtbx_picture_uncorrected, fill = 
   coord_flip()
 
 
-#Reading (1 outliar)
-ggplot(uncorrected_scores_tb, aes(eventname, nihtbx_reading_uncorrected, fill = eventname)) +
+#Reading
+ggplot(uncorrected_scores, aes(eventname, nihtbx_reading_uncorrected, fill = eventname)) +
   geom_rain(alpha = .5, 
             boxplot.args.pos = list( 
               width = 0.05, position = position_nudge(x = 0.13)),
@@ -290,6 +311,7 @@ ggpairs(picvocab_uncorrected_wide[,2:4],lower=list(continuous=wrap("smooth", col
 #Flanker: 0.35-0.48
 
 flanker_uncorrected_wide<-reshape(flanker_uncorrected, idvar = "ID", timevar = "eventname", direction = "wide")
+
 flanker_uncorrected_wide<-flanker_uncorrected_wide%>%
 mutate(eventname = case_when(
 eventname == "baseline_year_1_arm_1" ~ "T_1",
@@ -312,7 +334,7 @@ ggpairs(picture_uncorrected_wide[,2:4],lower=list(continuous=wrap("smooth", colo
         diag=list(continuous="bar"))
 
 
-#Reading 0.69-0.75
+#Reading 0.69-0.76
 
 reading_uncorrected_wide<-reshape(reading_uncorrected, idvar = "ID", timevar = "eventname", direction = "wide")
 ggpairs(reading_uncorrected_wide[,2:4],lower=list(continuous=wrap("smooth", colour="green")),
@@ -329,7 +351,7 @@ rate_of_correct<-
   select(matches("src_subject_id|eventname|tfmri_nb_all_beh_ctotal_rate"))
 
 #joining uncorrected and wm 
-uncorrected_wm<-full_join(uncorrected_scores_tb, rate_of_correct, by=join_by('src_subject_id','eventname'))
+uncorrected_wm<-full_join(uncorrected_scores, rate_of_correct, by=join_by('src_subject_id','eventname'))
 #when eventname had different values between dataframes I used to get all NA for wm 
 
 
@@ -345,7 +367,15 @@ uncorrected_wm %>%
                    ~ sum(is.na(.)) / n() * 100))
 
 
-#spaghetti plot for wm #check after renaming timepoints because it looks weird 
+#renaming timepoints for WM
+rate_of_correct<-rate_of_correct%>%
+  mutate(eventname = case_when(
+    eventname == "baseline_year_1_arm_1" ~ "T_1",
+    eventname == "2_year_follow_up_y_arm_1" ~ "T_2",
+    eventname == "4_year_follow_up_y_arm_1" ~ "T_3"))
+
+
+#spaghetti plot for wm  
 ggplot(rate_of_correct,aes(eventname,tfmri_nb_all_beh_ctotal_rate, group=src_subject_id))+
   geom_point(alpha=0.5)+
   geom_line(alpha=0.5)+
@@ -369,7 +399,7 @@ ggplot(rate_of_correct, aes(eventname, tfmri_nb_all_beh_ctotal_rate, fill = even
 #make wide 
 rate_of_correct_wide<-reshape(rate_of_correct, idvar = "src_subject_id", timevar = "eventname", direction = "wide")
 
-#relationship between timepoints 
+#relationship between timepoints 0.395-0.483
 ggpairs(rate_of_correct_wide[,2:4],lower=list(continuous=wrap("smooth", colour="pink")),
         diag=list(continuous="bar"))
 
@@ -402,7 +432,7 @@ uncorrected_wm_visit<- select(uncorrected_wm_visit, src_subject_id, eventname, v
 colnames(uncorrected_wm_visit)<-c('ID','eventname','visit_type', 'pic_vocab','flanker', 'pattern', 'picture','reading','working_mem')
 
 
-#renaming time points 
+#renaming time points (not necessary, I did it above)
 uncorrected_wm_visit<-uncorrected_wm_visit%>%
   mutate(eventname = case_when(
     eventname == "baseline_year_1_arm_1" ~ "T_1",
