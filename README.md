@@ -26,3 +26,10 @@ If 20 correct responses are "guaranteed" (not included in the raw score) the rem
 
 2. Compared 3 wm tasks (tfmri_nb_all_beh_ctotal_rate(=rate of correct responses), tfmri_nb_all_beh_c0b_mrt (=Average reaction time for all correct responses to 0 back stimuli during run 1 and run 2), tfmri_nb_all_beh_c2b_mrt (=Average reaction time for all correct responses to 2 back stimuli during run 1 and run 2) to List from NIHtb and ravens matrices and the highest correlations were between rate of correct response for both list and WISC (0.36), so this measure was selected.
 3. NDAR_INVA31C7WYJ was an outlier (180) in T_2 reading, but the rest of their scores looked normal, so I replaced with NA. 
+
+
+Model specifiication and fit:
+Having only 3 timepoints means that the basis model has 0 degrees of freedom, the model is saturated/just-identified. To make model comparison possible, we constrained the residual error variances (*a) for the 3 timepoints (obs variables) ("growth" by default uniquely estimates each one) and got 2 df more. 
+Picture vocabulary 
+1. For 3 timepoints,
+2. The intercept estimates between linear and basis model are kind of similar, the slopes are not
