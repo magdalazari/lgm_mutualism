@@ -30,6 +30,15 @@ If 20 correct responses are "guaranteed" (not included in the raw score) the rem
 
 Model specifiication and fit:
 Having only 3 timepoints means that the basis model has 0 degrees of freedom, the model is saturated/just-identified. To make model comparison possible, we constrained the residual error variances (*a) for the 3 timepoints (obs variables) ("growth" by default uniquely estimates each one) and got 2 df more. 
-Picture vocabulary 
-1. For 3 timepoints,
-2. The intercept estimates between linear and basis model are kind of similar, the slopes are not
+
+Picture vocabulary (constrained)
+Linear: CFI: 0.998  TLI: 0.998   RMSEA: 0.029   SRMR: 0.019
+Basis: CFI: 0.998  TLI: 0.998   RMSEA: 0.028   SRMR: 0.018
+anova: basis has lower AIC and BIC and significant χ2 diff value, which means that the basis model fits significantly better and the extra parameter estimation is worth it.
+
+Basis: mean score at baseline 
+mean rate of change 
+between-person variability at baseline 
+between-person variability in rate of change 
+how does baseline associate with rate of development?
+how much of the variance is not explained by the latent factor?
