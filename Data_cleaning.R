@@ -443,7 +443,7 @@ uncorrected_wm_visit<-uncorrected_wm_visit%>%
 #saving dataframe to file to make it readable by a different script 
 saveRDS(uncorrected_wm_visit, file = "uncorrected_wm_visit.rds")
 
-
+length(unique(uncorrected_wm_visit$src_subject_id))
 
 ###############Little man task###############
 
