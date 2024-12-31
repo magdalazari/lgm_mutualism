@@ -29,6 +29,7 @@ If 20 correct responses are "guaranteed" (not included in the raw score) the rem
 
 
 Model specifiication and fit (for constrained):
+Assuming data was missing completely at random so we use FIML to impute missing data.
 Having only 3 timepoints means that the basis model has 0 degrees of freedom, the model is saturated/just-identified. To make model comparison possible, we constrained the residual error variances (*a) for the 3 timepoints (obs variables) ("growth" by default uniquely estimates each one) and got 2 df more. 
 
 Picture vocabulary 
@@ -72,4 +73,5 @@ anova: basis has lower AIC and BIC, basis fits significantly better
 Basis is better (much better indices and comparison)
 
 Working memory
-Some estimated variances in linear are negative, check! 
+The slope variance was negative/0 (Heywood case), so 1. wm*100 2. freed error variance constraints.
+Basis is better than linear. 
