@@ -5,6 +5,7 @@ uncorrected_wm_visit <- readRDS("uncorrected_wm_visit.rds")
 #loading packages
 library(lavaan)
 library(ggplot2)
+library(ggcorrplot)
 library(tidyverse)
 
 #####Picture Vocabulary 
@@ -62,10 +63,6 @@ summary(fit_basis_picvocab_constrained, fit.measures = TRUE, rsquare = TRUE, sta
 #(so that it wont be estimated uniquely -automatically- by growth function, we gain 2 df for each model)
 anova(fit_basis_picvocab_constrained,fit_linear_picvocab_constrained)
 
-
-#predicted scores at baseline and predicted scores of change #same as linear, check
-predicted_scores_basis_picvocab<-data.frame(predict(fit_basis_picvocab))
-plot(predicted_scores_basis_picvocab)
 
 
 #####Flanker 
@@ -252,7 +249,6 @@ wm_slope =~ 0*wm_T1 + 1*wm_T2 + 2*wm_T3
 wm_T1~~a*wm_T1
 wm_T2~~a*wm_T2
 wm_T3~~a*wm_T3
-
 '
 
 
@@ -272,3 +268,99 @@ fit_basis_wm<- growth(basis_wm, data=wm_multiplied,missing='fiml')
 summary(fit_basis_wm, fit.measures = TRUE, rsquare = TRUE, standardized = TRUE)
 
 anova(fit_basis_wm, fit_linear_wm)
+
+
+#####Extracting intercepts and slopes for each cognitive domain
+
+#Picture vocabulary (basis)
+
+predict_picvocab<-data.frame(predict(fit_basis_picvocab))
+
+#Flanker (basis)
+
+predict_flanker<-data.frame(predict(fit_basis_flanker))
+
+#Pattern (basis)
+
+predict_pattern<-data.frame(predict(fit_basis_pattern))
+
+#Picture (linear)
+
+predict_picture<-data.frame(predict(fit_linear_picture))
+
+#Reading (basis)
+
+predict_reading<-data.frame(predict(fit_basis_reading))
+
+#Working memory (basis, unconstrained err var)
+
+predict_wm<-data.frame(predict(fit_basis_wm))
+
+
+
+#joining all predict() data frames
+
+#trying all at once 
+#no common variables between dataframes is a problem 
+predicted_scores<-full_join(predict_picvocab, predict_flanker)
+
+#pasting as they are, have to be sure that rows align !!!
+#error for wm->  has less rows than the rest, so I should join? but add sbj number somehow 
+
+predicted_scores<-bind_cols(predict_picvocab, predict_flanker, predict_pattern, predict_picture, predict_reading)
+plot(predicted_scores)
+
+#I should reorder the columns maybe to get first intercepts then slopes 
+
+
+
+#test to see if plotted predict is different between linear and basis 
+#they dont look that different 
+predict_basis<- data.frame (predict(fit_basis_pattern))
+predict_linear<- data.frame (predict(fit_linear_pattern))
+plot(predict_basis)
+plot(predict_linear)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#change this code later 
+ggcorrplot(cor_picvocab_basis,
+           
+           type = 'full',
+           lab = TRUE,
+           ggtheme = theme_minimal())
+
+cor_picvocab_basis<- cor(predicted_scores_basis_picvocab, use= 'pairwise.complete.obs')
+cor_matrix <- cor(subset_beh, use = 'pairwise.complete.obs')
+
+cor_predict <- cor(predicted_scores, use = 'pairwise.complete.obs')
+
+
+#reordering columns to make more sense 
+
+cor_predict<-data.frame(cor_predict)
+
+#reordering columns 
+cor_predict<- cor_predict[ , c(1,3,5,7,9,2,4,6,8,10)]
+
+
+#not the order of the coumns I want in the output
+ggcorrplot(cor_predict,
+           hc.order = TRUE,
+           
+           lab = TRUE,
+           ggtheme = theme_minimal())
+
+#next steps: see if it makes sense to add sbj number to match rows? and then remove them somehow 
+

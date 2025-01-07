@@ -63,7 +63,7 @@ uncorrected_scores<-
   select(matches("src_subject_id|eventname|uncorrected")) %>%
   select(!c(nihtbx_list_uncorrected, nihtbx_cardsort_uncorrected,nihtbx_fluidcomp_uncorrected,nihtbx_cryst_uncorrected,nihtbx_totalcomp_uncorrected))
 
-
+#changing time point names  
 uncorrected_scores<- uncorrected_scores%>%
   mutate(eventname = case_when(
     eventname == "baseline_year_1_arm_1" ~ "T_1",
@@ -81,11 +81,10 @@ max(reading_uncorrected_wide$reading_uncorrected.T_2, na.rm = T)
 max(scale(reading_uncorrected_wide$reading_uncorrected.T_2), na.rm=T)
 
 
-#where is the (first) maximum value? 3782 (not correct?)
+#where is the (first) maximum value? 3782 (not correct? sometimes happens in a changed dataframe)
 which.max(reading_uncorrected_wide$reading_uncorrected.T_2)
 
 #Removing outlier from first dataframe 
-
 uncorrected_scores[uncorrected_scores==180]<-NA
 
 
@@ -125,7 +124,7 @@ summarise(across(c(nihtbx_picture_uncorrected, nihtbx_picvocab_uncorrected, niht
 ~ sum(is.na(.)) / n() * 100))
 #do the calculations to double check ?
 
-#try this  
+#try this alternative  
 ct %>% 
 group_by(Species) %>%
 mutate(logi_missing = is.na(Sepal.Length)) %>%
@@ -137,8 +136,7 @@ vis_dat(uncorrected_scores, warn_large_data= FALSE)
 
 
 
-#Renaming columns for raw and flanker (not useful anymore)
-
+#changing time point names for raw and flanker (not useful anymore)
 
 data_raw <- data_raw %>%
   mutate(eventname = case_when(
@@ -352,7 +350,7 @@ rate_of_correct<-
 
 #joining uncorrected and wm 
 uncorrected_wm<-full_join(uncorrected_scores, rate_of_correct, by=join_by('src_subject_id','eventname'))
-#when eventname had different values between dataframes I used to get all NA for wm 
+#when eventname has different values between dataframes I get all NA for wm 
 
 
 #number of NA for working memory 
@@ -367,7 +365,7 @@ uncorrected_wm %>%
                    ~ sum(is.na(.)) / n() * 100))
 
 
-#renaming timepoints for WM
+#renaming time points for WM
 rate_of_correct<-rate_of_correct%>%
   mutate(eventname = case_when(
     eventname == "baseline_year_1_arm_1" ~ "T_1",
@@ -414,6 +412,15 @@ visit_type<-
   visit_type%>%
   select(matches('src_subject_id|eventname|visit_type'))
 
+#renaming time points 
+
+visit_type<-visit_type%>%
+  mutate(eventname = case_when(
+    eventname == "baseline_year_1_arm_1" ~ "T_1",
+    eventname == "2_year_follow_up_y_arm_1" ~ "T_2",
+    eventname == "4_year_follow_up_y_arm_1" ~ "T_3"))
+
+
 #joining with uncorrected wm 
 #full_join joined visit types for every measurement point, did not want that 
 #I must only keep the visit type for the 3 measurement times in the uncorrected_wm_visit, so left_join
@@ -432,12 +439,6 @@ uncorrected_wm_visit<- select(uncorrected_wm_visit, src_subject_id, eventname, v
 colnames(uncorrected_wm_visit)<-c('ID','eventname','visit_type', 'pic_vocab','flanker', 'pattern', 'picture','reading','working_mem')
 
 
-#renaming time points (not necessary, I did it above)
-uncorrected_wm_visit<-uncorrected_wm_visit%>%
-  mutate(eventname = case_when(
-    eventname == "baseline_year_1_arm_1" ~ "T_1",
-    eventname == "2_year_follow_up_y_arm_1" ~ "T_2",
-    eventname == "4_year_follow_up_y_arm_1" ~ "T_3"))
 
 
 #saving dataframe to file to make it readable by a different script 
@@ -445,68 +446,7 @@ saveRDS(uncorrected_wm_visit, file = "uncorrected_wm_visit.rds")
 
 length(unique(uncorrected_wm_visit$src_subject_id))
 
-###############Little man task###############
 
-little_man<-read.csv('nc_y_lmt.csv')
-
-#subsetting correct percentage of all 32 trials 
-little_man<-
-  little_man%>%
-  select(matches('src_subject_id|eventname|lmt_scr_perc_correct'))
-
-#number of NA  
-little_man %>% 
-  group_by(eventname) %>% 
-  summarise(across(lmt_scr_perc_correct, ~sum(is.na(.))))
-
-#percentage of NA  
-little_man %>% 
-  group_by(eventname) %>% 
-  summarise(across(lmt_scr_perc_correct, 
-                   ~ sum(is.na(.)) / n() * 100))
-
-table(little_man$eventname)
-
-#spaghetti plot
-
-little_man<-little_man%>%
-  mutate(eventname = case_when(
-    eventname == "baseline_year_1_arm_1" ~ "T_1",
-    eventname == "2_year_follow_up_y_arm_1" ~ "T_2",
-    eventname == "4_year_follow_up_y_arm_1" ~ "T_3"))
-
-ggplot(little_man,aes(eventname,lmt_scr_perc_correct, group=src_subject_id))+
-  geom_point(alpha=0.5)+
-  geom_line(alpha=0.5)+
-  labs(x='Eventname', y='Little man score')
-
-#simple plot with regression line
-
-ggplot(little_man, aes(eventname, lmt_scr_perc_correct, group=src_subject_id)) +
-  geom_point(color = "blue", alpha = 0.7) +  # Add points
-  geom_smooth(method = "lm", se = TRUE, color = "red") +  #regression line
-  theme_minimal()
-
-#without regression line
-ggplot(little_man, aes(eventname, lmt_scr_perc_correct, group=src_subject_id)) +
-  geom_point(color = "blue", alpha = 0.7) +  # Add points
-  theme_minimal()
-
-
-#raincloud plot
-ggplot(little_man, aes(eventname, lmt_scr_perc_correct, fill = eventname)) +
-  geom_rain(alpha = .5, 
-           ) +
-  theme_classic() +
-  theme(axis.title.y = element_blank())+
-  scale_fill_brewer(palette = 'Dark2') +
-  guides(fill = 'none', color = 'none') +
-  coord_flip()
-
-#relationship between timepoints: T_1 has low correlations with the res
-little_man_wide<-reshape(little_man, idvar = "src_subject_id", timevar = "eventname", direction = "wide")
-ggpairs(little_man_wide[,2:4],lower=list(continuous=wrap("smooth", colour="pink")),
-        diag=list(continuous="bar"))
 
 ##########raw_scores##############
 
