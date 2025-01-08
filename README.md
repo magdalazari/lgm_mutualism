@@ -75,3 +75,6 @@ Basis is better (much better indices and comparison)
 Working memory
 The slope variance was negative/0 (Heywood case), so 1. wm*100 2. freed error variance constraints.
 Basis is better than linear. 
+
+Correlations between the growth parameters:
+Slopes: 
