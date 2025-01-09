@@ -18,6 +18,10 @@ Notes:
 
 -Remote assessments in the 2-year and 4-year follow-up protocols used a Flanker task using the Inquisit system from Millisecond. This task was designed to mimic the NIH Toolbox Flanker task as closely as possible.
 
+Two-year follow-up assessment:
+• It was not possible to administer NIH Toolbox Pattern Comparison Processing Speed
+task remotely and we did not administer it. -> so people who are remote did not participate in  T2, bias?
+
 
 Data cleaning steps/notes:
 1. Only 3 tests had raw scores available, so checked for the correlations between raw and uncorrected (the 2 types that ABCD recommends) at T_1.
