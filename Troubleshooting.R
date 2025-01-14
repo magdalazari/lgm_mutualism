@@ -4,8 +4,14 @@ library(ggplot2)
 library(ggcorrplot)
 library(tidyverse)
 
+rm(list=ls())
+
 uncorrected_wm_visit <- readRDS("uncorrected_wm_visit.rds")
 
+
+picvocab_uncorrected <-data.frame(uncorrected_wm_visit$ID, uncorrected_wm_visit$eventname, uncorrected_wm_visit$pic_vocab)
+
+reading_uncorrected<- data.frame(uncorrected_wm_visit$ID, uncorrected_wm_visit$eventname, uncorrected_wm_visit$reading)
 
 #Script for: subsetting complete cases for picture vocabulary and reading to see what is going on
 #speficied: slope and intercept, fixed error variances 
@@ -15,7 +21,7 @@ uncorrected_wm_visit <- readRDS("uncorrected_wm_visit.rds")
 
 #Wide picture vocabulary 
 
-picvocab_uncorrected_wide<-reshape(picvocab_uncorrected, idvar = "ID", timevar = "eventname", direction = "wide")
+picvocab_uncorrected_wide<-reshape(picvocab_uncorrected, idvar = "uncorrected_wm_visit.ID", timevar = "uncorrected_wm_visit.eventname", direction = "wide")
 colnames(picvocab_uncorrected_wide)<-c('ID','picvocab_T1', 'picvocab_T2', 'picvocab_T3')
 
 #complete cases: 4271
@@ -26,7 +32,7 @@ dim(picvocab_complete)
 
 
 #Wide reading
-reading_uncorrected_wide<-reshape(reading_uncorrected, idvar = "ID", timevar = "eventname", direction = "wide")
+reading_uncorrected_wide<-reshape(reading_uncorrected, idvar = "uncorrected_wm_visit.ID", timevar = "uncorrected_wm_visit.eventname", direction = "wide")
 colnames(reading_uncorrected_wide)<-c('ID','reading_T1', 'reading_T2', 'reading_T3')
 
 #complete cases: 4229
