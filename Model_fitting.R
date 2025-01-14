@@ -168,10 +168,9 @@ basis_picture <- '
 picture_basis_intercept =~ 1*picture_T1 + 1*picture_T2 + 1*picture_T3
 picture_basis_slope =~ 0*picture_T1 + picture_T2 + 1*picture_T3 
 
-
-picture_T1~~a*picture_T1
-picture_T2~~a*picture_T2
-picture_T3~~a*picture_T3
+picture_T1~~a1*picture_T1
+picture_T2~~a2*picture_T2
+picture_T3~~a3*picture_T3
 '
 #fit model
 fit_basis_picture<- growth(basis_picture, data=picture_uncorrected_wide,missing='fiml')
@@ -192,7 +191,7 @@ colnames(reading_uncorrected_wide)<-c('ID','reading_T1', 'reading_T2', 'reading_
 #specify model
 linear_reading<- ' 
 reading_intercept =~ 1*reading_T1 + 1*reading_T2 + 1*reading_T3
-reading_slope =~ 0*reading_T1 + 12*reading_T2 + 2*reading_T3 
+reading_slope =~ 0*reading_T1 + 1*reading_T2 + 2*reading_T3 
 
 
 reading_T1~~a*reading_T1
