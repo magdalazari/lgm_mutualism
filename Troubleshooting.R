@@ -6,6 +6,7 @@ library(tidyverse)
 
 uncorrected_wm_visit <- readRDS("uncorrected_wm_visit.rds")
 
+
 #Script for: subsetting complete cases for picture vocabulary and reading to see what is going on
 #speficied: slope and intercept, fixed error variances 
 
@@ -238,3 +239,8 @@ summary(fit_picvocab_reading_linear_complete, standardized = T)
 
 summary(fit_picvocab_reading_basis_complete, standardized = T)
 
+#Linear combined: slope-slope est.std is 0.640 (ok)
+standardizedSolution(fit_picvocab_reading_linear_complete)
+
+#Basis combined: slope-slope est.std is 0.602 (ok)
+standardizedSolution(fit_picvocab_reading_basis_complete)
