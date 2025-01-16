@@ -8,11 +8,22 @@ library(ggplot2)
 library(ggcorrplot)
 library(tidyverse)
 
+###Data frame for each task 
+
+picvocab_uncorrected <-data.frame(uncorrected_wm_visit$ID, uncorrected_wm_visit$eventname, uncorrected_wm_visit$pic_vocab)
+
+wm_uncorrected<-data.frame(uncorrected_wm_visit$ID, uncorrected_wm_visit$eventname, uncorrected_wm_visit$working_mem)
+
+
 #####Picture Vocabulary 
 
 #making wide & renaming columns (again?!)
-picvocab_uncorrected_wide<-reshape(picvocab_uncorrected, idvar = "ID", timevar = "eventname", direction = "wide")
+picvocab_uncorrected_wide<-reshape(picvocab_uncorrected, idvar = "uncorrected_wm_visit.ID", timevar = "uncorrected_wm_visit.eventname", direction = "wide")
 colnames(picvocab_uncorrected_wide)<-c('ID','picvocab_T1', 'picvocab_T2', 'picvocab_T3')
+
+
+wm_uncorrected_wide<-reshape(wm_uncorrected, idvar = "uncorrected_wm_visit.ID", timevar = "uncorrected_wm_visit.eventname", direction = "wide")
+colnames(wm_uncorrected_wide)<-c('ID','wm_T1', 'wm_T2', 'wm_T3')
 
 ##equality constraints of residual error variances to get more degrees of freedom for comparison (homogeneity of variances)
 
@@ -152,9 +163,9 @@ picture_intercept =~ 1*picture_T1 + 1*picture_T2 + 1*picture_T3
 picture_slope =~ 0*picture_T1 + 1*picture_T2 + 2*picture_T3 
 
 
-picture_T1~~a*picture_T1
-picture_T2~~a*picture_T2
-picture_T3~~a*picture_T3
+picture_T1~~a1*picture_T1
+picture_T2~~a2*picture_T2
+picture_T3~~a3*picture_T3
 '
 #fit model
 fit_linear_picture<- growth(linear_picture, data=picture_uncorrected_wide,missing='fiml')
@@ -224,11 +235,11 @@ anova(fit_basis_reading, fit_linear_reading)
 #####Working memory
 
 #making wide & renaming columns
-wm_wide<-reshape(working_memory, idvar = "src_subject_id", timevar = "eventname", direction = "wide")
+wm_wide<-reshape(wm_uncorrected, idvar = "uncorrected_wm_visit.ID", timevar = "uncorrected_wm_visit.eventname", direction = "wide")
 colnames(wm_wide)<-c('ID','wm_T1', 'wm_T2', 'wm_T3')
 
 #multiplying so that absolute values are not as small 
-wm_multiplied<-mutate_if(wm_wide, is.numeric, ~ . * 100)
+wm_multiplied<-mutate_if(wm_wide, is.numeric, ~ . * 10)
 
 ###Linear model (free error var because of HC) 
 
@@ -253,9 +264,12 @@ summary(fit_linear_wm, fit.measures = TRUE, rsquare = TRUE, standardized = TRUE)
 basis_wm <- ' 
 wm_basis_intercept =~ 1*wm_T1 + 1*wm_T2 + 1*wm_T3
 wm_basis_slope =~ 0*wm_T1 + wm_T2 + 1*wm_T3 
+
+
+
 '
 #fit model
-fit_basis_wm<- growth(basis_wm, data=wm_multiplied,missing='fiml')
+fit_basis_wm<- growth(basis_wm, data=wm_wide,missing='fiml')
 summary(fit_basis_wm, fit.measures = TRUE, rsquare = TRUE, standardized = TRUE)
 
 anova(fit_basis_wm, fit_linear_wm)

@@ -443,6 +443,7 @@ colnames(uncorrected_wm_visit)<-c('ID','eventname','visit_type', 'pic_vocab','fl
 
 #saving dataframe to file to make it readable by a different script 
 saveRDS(uncorrected_wm_visit, file = "uncorrected_wm_visit.rds")
+saveRDS(uncorrected_wm, file = "full_scores.rds")
 
 length(unique(uncorrected_wm_visit$src_subject_id))
 

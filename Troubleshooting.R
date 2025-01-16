@@ -4,25 +4,27 @@ library(ggplot2)
 library(ggcorrplot)
 library(tidyverse)
 
+#Script for: subsetting complete cases for picture vocabulary and reading to see what is going on
+#speficied: slope and intercept, fixed error variances 
+
 rm(list=ls())
 
 uncorrected_wm_visit <- readRDS("uncorrected_wm_visit.rds")
 
-
+#subsetting picvocab and making wide 
 picvocab_uncorrected <-data.frame(uncorrected_wm_visit$ID, uncorrected_wm_visit$eventname, uncorrected_wm_visit$pic_vocab)
+picvocab_uncorrected_wide<-reshape(picvocab_uncorrected, idvar = "uncorrected_wm_visit.ID", timevar = "uncorrected_wm_visit.eventname", direction = "wide")
+colnames(picvocab_uncorrected_wide)<-c('ID','picvocab_T1', 'picvocab_T2', 'picvocab_T3')
 
+
+#subsettiing reading and making wide 
 reading_uncorrected<- data.frame(uncorrected_wm_visit$ID, uncorrected_wm_visit$eventname, uncorrected_wm_visit$reading)
+reading_uncorrected_wide<-reshape(reading_uncorrected, idvar = "uncorrected_wm_visit.ID", timevar = "uncorrected_wm_visit.eventname", direction = "wide")
+colnames(reading_uncorrected_wide)<-c('ID','reading_T1', 'reading_T2', 'reading_T3')
 
-#Script for: subsetting complete cases for picture vocabulary and reading to see what is going on
-#speficied: slope and intercept, fixed error variances 
 
 
 ###Subseting + complete cases 
-
-#Wide picture vocabulary 
-
-picvocab_uncorrected_wide<-reshape(picvocab_uncorrected, idvar = "uncorrected_wm_visit.ID", timevar = "uncorrected_wm_visit.eventname", direction = "wide")
-colnames(picvocab_uncorrected_wide)<-c('ID','picvocab_T1', 'picvocab_T2', 'picvocab_T3')
 
 #complete cases: 4271
 
@@ -32,8 +34,6 @@ dim(picvocab_complete)
 
 
 #Wide reading
-reading_uncorrected_wide<-reshape(reading_uncorrected, idvar = "uncorrected_wm_visit.ID", timevar = "uncorrected_wm_visit.eventname", direction = "wide")
-colnames(reading_uncorrected_wide)<-c('ID','reading_T1', 'reading_T2', 'reading_T3')
 
 #complete cases: 4229
 
@@ -171,21 +171,24 @@ summary(fit_picvocab_reading_basis_complete, fit.measures = TRUE, rsquare = TRUE
 
 predict_picvocab_linear_complete<-data.frame(predict(fit_picvocab_linear_complete))
 cor(predict_picvocab_linear_complete)
+plot(predict_picvocab_linear_complete)
 
 #Picture vocabulary basis (int-slope:0.388)
 
 predict_picvocab_basis_complete<-data.frame(predict(fit_picvocab_basis_complete))
-
+plot(predict_picvocab_basis_complete)
 
 #Reading linear (int-slope:0.236)
 
 predict_reading_linear_complete<-data.frame(predict(fit_reading_linear_complete))
 cor(predict_reading_linear_complete)
+plot(predict_reading_linear_complete)
 
 #Reading Basis (int-slope:0.203)
 
 predict_reading_basis_complete<-data.frame(predict(fit_reading_basis_complete))
 cor(predict_reading_basis_complete)
+plot(predict_reading_basis_complete)
 
 ###Predict for combined models 
 
@@ -203,6 +206,8 @@ ggcorrplot(cor_predict_picvocab_reading_linear_complete,
            lab_size = 2.3,
            ggtheme = theme_minimal())
 
+plot(predict_picvocab_reading_linear_complete)
+
 #Basis: slope-slope: 0.84
 
 predict_picvocab_reading_basis_complete<-data.frame(predict(fit_picvocab_reading_basis_complete))
@@ -216,6 +221,11 @@ ggcorrplot(cor_predict_picvocab_reading_basis_complete,
            lab = TRUE,
            lab_size = 2.3,
            ggtheme = theme_minimal())
+
+plot(predict_picvocab_reading_basis_complete)
+
+fitted.values(fit_picvocab_reading_basis_complete)
+
 
 dim(predict_picvocab_reading_basis_complete)
 
