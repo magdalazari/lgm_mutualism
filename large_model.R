@@ -9,10 +9,10 @@ library(ggplot2)
 library(ggcorrplot)
 library(tidyverse)
 
-uncorrected_wm_visit <- readRDS("uncorrected_wm_visit.rds")
+uncorrected_wm_visit <- readRDS("~/surfdrive/Shared/uncorrected_wm_visit.rds")
 
 #this does not have visit_type
-full_scores<- readRDS("full_scores.rds")
+full_scores<- readRDS("~/surfdrive/Shared/full_scores.rds")
 
 #scaling working memory (for both data frames)
 full_scores$tfmri_nb_all_beh_ctotal_rate<-full_scores$tfmri_nb_all_beh_ctotal_rate*100
@@ -71,12 +71,11 @@ picvocab_reading_wide<-picvocab_reading_wide[ ,c(1,2,4,6,3,5,7)]
 #Model A/standard: 1. int+sl, 2.fixed error var (what about wm?)
 
 flanker_wm_model_A <- ' 
-flanker_intercept=~ 1*flanker_T1 + 1*flanker_T2 + 1*flanker_T3
-flanker_slope=~ 0*flanker_T1 +flanker_T2 + 1*flanker_T3 
+# flanker_intercept=~ 1*flanker_T1 + 1*flanker_T2 + 1*flanker_T3
+# flanker_slope=~ 0*flanker_T1 +flanker_T2 + 1*flanker_T3 
 
 wm_intercept =~ 1*wm_T1 + 1*wm_T2 + 1*wm_T3
 wm_slope =~ 0*wm_T1 + wm_T2 + 1*wm_T3 
-
 
 flanker_T1~~a*flanker_T1
 flanker_T2~~a*flanker_T2
@@ -262,23 +261,24 @@ picvocab_intercept=~ 1*picvocab_T1 + 1*picvocab_T2 + 1*picvocab_T3
 picvocab_slope=~ 0*picvocab_T1 +picvocab_T2 + 1*picvocab_T3 
 
 reading_intercept =~ 1*reading_T1 + 1*reading_T2 + 1*reading_T3
-reading_slope =~ 0*reading_T1 + reading_T2 + 1*reading_T3 
+reading_slope =~ 0*reading_T1 + reading_T2 + 1*reading_T3
 
-flanker_T1~~a*flanker_T1
-flanker_T2~~a*flanker_T2
-flanker_T3~~a*flanker_T3
+flanker_T1~~nih*flanker_T1
+flanker_T2~~nih*flanker_T2
+flanker_T3~~nih*flanker_T3
 
-wm_T1~~b*wm_T1
-wm_T2~~b*wm_T2
-wm_T3~~b*wm_T3
+picvocab_T1~~nih*picvocab_T1
+picvocab_T2~~nih*picvocab_T2
+picvocab_T3~~nih*picvocab_T3
 
-picvocab_T1~~c*picvocab_T1
-picvocab_T2~~c*picvocab_T2
-picvocab_T3~~c*picvocab_T3
+reading_T1~~nih*reading_T1
+reading_T2~~nih*reading_T2
+reading_T3~~nih*reading_T3
 
-reading_T1~~d*reading_T1
-reading_T2~~d*reading_T2
-reading_T3~~d*reading_T3
+wm_T1~~wm_T1
+wm_T2~~wm_T2
+wm_T3~~wm_T3
+
 '
 
 #fit model
@@ -309,7 +309,7 @@ flanker_intercept=~ 1*flanker_T1 + 1*flanker_T2 + 1*flanker_T3
 flanker_slope=~ 0*flanker_T1 +flanker_T2 + 1*flanker_T3 
 
 wm_intercept =~ 1*wm_T1 + 1*wm_T2 + 1*wm_T3
-wm_slope =~ 0*wm_T1 + wm_T2 + 1*wm_T3 
+wm_slope =~ 0*wm_T1 + wm_T2 + 1*wm_T3
 
 
 picvocab_intercept=~ 1*picvocab_T1 + 1*picvocab_T2 + 1*picvocab_T3
@@ -324,38 +324,40 @@ picture_slope =~ 0*picture_T1 + picture_T2 + 1*picture_T3
 pattern_intercept=~ 1*pattern_T1 + 1*pattern_T2 + 1*pattern_T3
 pattern_slope=~ 0*pattern_T1 + pattern_T2 + 1*pattern_T3 
 
+picture_slope ~~ 1*picture_slope
+picture_intercept ~~1*picture_slope
+
+wm_T1~~i*wm_T1
+wm_T2~~i*wm_T2
+wm_T3~~i*wm_T3
+
 flanker_T1~~a*flanker_T1
 flanker_T2~~a*flanker_T2
 flanker_T3~~a*flanker_T3
 
+picvocab_T1~~b*picvocab_T1
+picvocab_T2~~b*picvocab_T2
+picvocab_T3~~b*picvocab_T3
 
-wm_T1~~b*wm_T1
-wm_T2~~b*wm_T2
-wm_T3~~b*wm_T3
+reading_T1~~c*reading_T1
+reading_T2~~c*reading_T2
+reading_T3~~c*reading_T3
 
+picture_T1~~d*picture_T1
+picture_T2~~d*picture_T2
+picture_T3~~d*picture_T3
 
-picvocab_T1~~c*picvocab_T1
-picvocab_T2~~c*picvocab_T2
-picvocab_T3~~c*picvocab_T3
-
-reading_T1~~d*reading_T1
-reading_T2~~d*reading_T2
-reading_T3~~d*reading_T3
-
-picture_T1~~e*picture_T1
-picture_T2~~e*picture_T2
-picture_T3~~e*picture_T3
-
-pattern_T1~~f*pattern_T1
-pattern_T2~~f*pattern_T2
-pattern_T3~~f*pattern_T3
+pattern_T1~~e*pattern_T1
+pattern_T2~~e*pattern_T2
+pattern_T3~~e*pattern_T3
 '
 
-#I get the same warning whether I fix the error variance for wm or not (also tried not fixing er var fr any domain and still get it) 
+#I get the same warning whether I fix the error variance for wm or not 
+# (also tried not fixing er var fr any domain and still get it) 
 #the individual wm model is ok without its error variances fixed though 
 
 #fit model
-fit_full<-growth(full_model, data=full_scores_wide,missing='fiml')
+fit_full<-growth(full_model, data=full_scores_wide,missing='fiml', estimator='mlr')
 summary(fit_full, fit.measures = TRUE, rsquare = TRUE, standardized = TRUE)
 fitted.values(fit_full)
 
