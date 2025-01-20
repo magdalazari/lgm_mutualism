@@ -39,7 +39,7 @@ colnames(full_scores_wide)<-c("ID", "picvocab_T1", "flanker_T1","pattern_T1", "p
 
 baselineDomain_CFA<- '
 flanker=~ flanker_T1 + flanker_T2 + flanker_T3
-wm =~ wm_T1 + wm_T2 + wm_T3
+# wm =~ wm_T1 + wm_T2 + wm_T3
 picvocab=~ picvocab_T1 + picvocab_T2 + picvocab_T3
 reading =~ reading_T1 + reading_T2 + reading_T3
 picture=~ picture_T1 + picture_T2 + picture_T3
@@ -107,9 +107,9 @@ T2 =~ NA*flanker_T2 + lambda1*flanker_T2 + wm_T2 + picvocab_T2 + reading_T2 + pi
 T3 =~ NA*flanker_T3 + lambda1*flanker_T3 + wm_T3 + picvocab_T3 + reading_T3 + picture_T3 + pattern_T3
 
 # Latent Variable Means
-# T1 ~ 0*1
-# T2 ~ 1
-# T3 ~ 1
+T1 ~ 0*1
+T2 ~ 1
+T3 ~ 1
 
 # Latent Variable Variances & Covariance
 T1 ~~ 1*T1
@@ -193,8 +193,164 @@ long_CFA_weak <- paste0(weak, paste(unlist(strsplit(long_CFA_configural, "\n"))[
 fit_weak <- cfa(long_CFA_weak, data = full_scores_wide, missing='fiml', estimator='mlr')
 summary(fit_weak, fit.measures = TRUE, standardized = TRUE)
 
+strong <- '
+T1 =~ NA*flanker_T1 + lambda1*flanker_T1 + lambda2*wm_T1 + lambda3*picvocab_T1 + lambda4*reading_T1 + lambda5*picture_T1 + lambda6*pattern_T1
+T2 =~ NA*flanker_T2 + lambda1*flanker_T2 + lambda2*wm_T2 + lambda3*picvocab_T2 + lambda4*reading_T2 + lambda5*picture_T2 + lambda6*pattern_T2
+T3 =~ NA*flanker_T3 + lambda1*flanker_T3 + lambda2*wm_T3 + lambda3*picvocab_T3 + lambda4*reading_T3 + lambda5*picture_T3 + lambda6*pattern_T3
+
+# Latent Variable Means
+T1 ~ 0*1
+T2 ~ 1
+T3 ~ 1
+
+# Latent Variable Variances & Covariance
+T1 ~~ 1*T1
+T2 ~~ T2
+T3 ~~ T3
+T1 ~~ T2 + T3
+T2 ~~ T3
+
+# intercepts
+flanker_T1 ~ i1*1
+wm_T1 ~ i2*1
+picvocab_T1 ~ i3*1
+reading_T1 ~ i4*1
+picture_T1 ~ i5*1
+pattern_T1 ~ i6*1
+
+flanker_T2 ~ i1*1
+wm_T2 ~ i2*1
+picvocab_T2 ~ i3*1
+reading_T2 ~ i4*1
+picture_T2 ~ i5*1
+pattern_T2 ~ i6*1
+
+flanker_T3 ~ i1*1
+wm_T3 ~ i2*1
+picvocab_T3 ~ i3*1
+reading_T3 ~ i4*1
+picture_T3 ~ i5*1
+pattern_T3 ~ i6*1
+
+# Unique Variances
+flanker_T1 ~~ flanker_T1
+wm_T1 ~~ wm_T1
+picvocab_T1 ~~ picvocab_T1
+reading_T1 ~~ reading_T1
+picture_T1 ~~ picture_T1
+pattern_T1 ~~ pattern_T1
+flanker_T2 ~~ flanker_T2
+wm_T2 ~~ wm_T2
+picvocab_T2 ~~ picvocab_T2
+reading_T2 ~~ reading_T2
+picture_T2 ~~ picture_T2
+pattern_T2 ~~ pattern_T2
+flanker_T3 ~~ flanker_T3
+wm_T3 ~~ wm_T3
+picvocab_T3 ~~ picvocab_T3
+reading_T3 ~~ reading_T3
+picture_T3 ~~ picture_T3
+pattern_T3 ~~ pattern_T3
+
+# whoopsi daisies "correlated uniquenesses"
+# only works with this
+
+flanker_T1 ~~ flanker_T2 + flanker_T3
+flanker_T2 ~~ flanker_T3
+wm_T1 ~~ wm_T2 + wm_T3
+wm_T2 ~~ wm_T3
+picvocab_T1 ~~ picvocab_T2 + picvocab_T3
+picvocab_T2 ~~ picvocab_T3
+reading_T1 ~~ reading_T2 + reading_T3
+reading_T2 ~~ reading_T3
+picture_T1 ~~ picture_T2 + picture_T3
+picture_T2 ~~ picture_T3
+pattern_T1 ~~ pattern_T2 + pattern_T3
+pattern_T2 ~~ pattern_T3
+'
+fit_strong <- cfa(strong, data = full_scores_wide, missing='fiml', estimator='mlr')
+summary(fit_strong, fit.measures = TRUE, standardized = TRUE)
 
 
+strict <- '
+T1 =~ NA*flanker_T1 + lambda1*flanker_T1 + lambda2*wm_T1 + lambda3*picvocab_T1 + lambda4*reading_T1 + lambda5*picture_T1 + lambda6*pattern_T1
+T2 =~ NA*flanker_T2 + lambda1*flanker_T2 + lambda2*wm_T2 + lambda3*picvocab_T2 + lambda4*reading_T2 + lambda5*picture_T2 + lambda6*pattern_T2
+T3 =~ NA*flanker_T3 + lambda1*flanker_T3 + lambda2*wm_T3 + lambda3*picvocab_T3 + lambda4*reading_T3 + lambda5*picture_T3 + lambda6*pattern_T3
+
+# Latent Variable Means
+T1 ~ 0*1
+T2 ~ 1
+T3 ~ 1
+
+# Latent Variable Variances & Covariance
+T1 ~~ 1*T1
+T2 ~~ T2
+T3 ~~ T3
+T1 ~~ T2 + T3
+T2 ~~ T3
+
+# intercepts
+flanker_T1 ~ i1*1
+wm_T1 ~ i2*1
+picvocab_T1 ~ i3*1
+reading_T1 ~ i4*1
+picture_T1 ~ i5*1
+pattern_T1 ~ i6*1
+
+flanker_T2 ~ i1*1
+wm_T2 ~ i2*1
+picvocab_T2 ~ i3*1
+reading_T2 ~ i4*1
+picture_T2 ~ i5*1
+pattern_T2 ~ i6*1
+
+flanker_T3 ~ i1*1
+wm_T3 ~ i2*1
+picvocab_T3 ~ i3*1
+reading_T3 ~ i4*1
+picture_T3 ~ i5*1
+pattern_T3 ~ i6*1
+
+# Unique Variances
+flanker_T1 ~~ u1*flanker_T1
+wm_T1 ~~ u2*wm_T1
+picvocab_T1 ~~ u3*picvocab_T1
+reading_T1 ~~ u4*reading_T1
+picture_T1 ~~ u5*picture_T1
+pattern_T1 ~~ u6*pattern_T1
+
+flanker_T2 ~~ u1*flanker_T2
+wm_T2 ~~ u2*wm_T2
+picvocab_T2 ~~ u3*picvocab_T2
+reading_T2 ~~ u4*reading_T2
+picture_T2 ~~ u5*picture_T2
+pattern_T2 ~~ u6*pattern_T2
+
+flanker_T3 ~~ u1*flanker_T3
+wm_T3 ~~ u2*wm_T3
+picvocab_T3 ~~ u3*picvocab_T3
+reading_T3 ~~ u4*reading_T3
+picture_T3 ~~ u5*picture_T3
+pattern_T3 ~~ u6*pattern_T3
+
+# whoopsi daisies "correlated uniquenesses"
+# only works with this
+
+flanker_T1 ~~ flanker_T2 + flanker_T3
+flanker_T2 ~~ flanker_T3
+wm_T1 ~~ wm_T2 + wm_T3
+wm_T2 ~~ wm_T3
+picvocab_T1 ~~ picvocab_T2 + picvocab_T3
+picvocab_T2 ~~ picvocab_T3
+reading_T1 ~~ reading_T2 + reading_T3
+reading_T2 ~~ reading_T3
+picture_T1 ~~ picture_T2 + picture_T3
+picture_T2 ~~ picture_T3
+pattern_T1 ~~ pattern_T2 + pattern_T3
+pattern_T2 ~~ pattern_T3
+'
+fit_strict <- cfa(strict, data = full_scores_wide, missing='fiml', estimator='mlr')
+summary(fit_strict, fit.measures = TRUE, standardized = TRUE)
 
 
 
