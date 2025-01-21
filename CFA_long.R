@@ -272,24 +272,300 @@ fit_strong <- cfa(strong, data = full_scores_wide, missing='fiml', estimator='ml
 summary(fit_strong, fit.measures = TRUE, standardized = TRUE)
 
 
-strict <- '
-T1 =~ NA*flanker_T1 + lambda1*flanker_T1 + lambda2*wm_T1 + lambda3*picvocab_T1 + lambda4*reading_T1 + lambda5*picture_T1 + lambda6*pattern_T1
-T2 =~ NA*flanker_T2 + lambda1*flanker_T2 + lambda2*wm_T2 + lambda3*picvocab_T2 + lambda4*reading_T2 + lambda5*picture_T2 + lambda6*pattern_T2
-T3 =~ NA*flanker_T3 + lambda1*flanker_T3 + lambda2*wm_T3 + lambda3*picvocab_T3 + lambda4*reading_T3 + lambda5*picture_T3 + lambda6*pattern_T3
 
-# Latent Variable Means
-T1 ~ 0*1
-T2 ~ 1
-T3 ~ 1
+#### ### ----------------- ### ####
+# nilam recoding
+#### ### ----------------- ### ####
 
-# Latent Variable Variances & Covariance
-T1 ~~ 1*T1
-T2 ~~ T2
-T3 ~~ T3
-T1 ~~ T2 + T3
-T2 ~~ T3
 
-# intercepts
+weak_invar <- ' #opening quote
+#factor loadings
+  eta1 =~ lambda_Flank*flanker_T1+ #for identification
+          lambda_WM*wm_T1+ 
+          lambda_PicVoc*picvocab_T1 +
+          lambda_Read*reading_T1+
+          lambda_Pict*picture_T1+
+          lambda_Pattern*pattern_T1
+          
+  eta2 =~ lambda_Flank*flanker_T2+ #for identification
+          lambda_WM*wm_T2+ 
+          lambda_PicVoc*picvocab_T2+
+          lambda_Read*reading_T2+
+          lambda_Pict*picture_T2+
+          lambda_Pattern*pattern_T2
+          
+  eta3 =~ lambda_Flank*flanker_T3+ #for identification
+          lambda_WM*wm_T3+ 
+          lambda_PicVoc*picvocab_T3+
+          lambda_Read*reading_T3+
+          lambda_Pict*picture_T3+
+          lambda_Pattern*pattern_T3
+                       
+#latent variable variances
+   eta1~~1*eta1 #for scaling
+   eta2~~eta2
+   eta3~~eta3
+   
+#latent variable covariances
+   eta1~~eta2
+   eta1~~eta3
+   eta2~~eta3
+   
+# Unique Variances
+  flanker_T1 ~~ flanker_T1
+  wm_T1 ~~ wm_T1
+  picvocab_T1 ~~ picvocab_T1
+  reading_T1 ~~ reading_T1
+  picture_T1 ~~ picture_T1
+  pattern_T1 ~~ pattern_T1
+  
+  flanker_T2 ~~ flanker_T2
+  wm_T2 ~~ wm_T2
+  picvocab_T2 ~~ picvocab_T2
+  reading_T2 ~~ reading_T2
+  picture_T2 ~~ picture_T2
+  pattern_T2 ~~ pattern_T2
+  
+  flanker_T3 ~~ flanker_T3
+  wm_T3 ~~ wm_T3
+  picvocab_T3 ~~ picvocab_T3
+  reading_T3 ~~ reading_T3
+  picture_T3 ~~ picture_T3
+  pattern_T3 ~~ pattern_T3
+  
+# whoopsi daisies "correlated uniquenesses"/unique covariances
+flanker_T1 ~~ flanker_T2 + flanker_T3
+flanker_T2 ~~ flanker_T3
+wm_T1 ~~ wm_T2 + wm_T3
+wm_T2 ~~ wm_T3
+picvocab_T1 ~~ picvocab_T2 + picvocab_T3
+picvocab_T2 ~~ picvocab_T3
+reading_T1 ~~ reading_T2 + reading_T3
+reading_T2 ~~ reading_T3
+picture_T1 ~~ picture_T2 + picture_T3
+picture_T2 ~~ picture_T3
+pattern_T1 ~~ pattern_T2 + pattern_T3
+pattern_T2 ~~ pattern_T3  
+  
+  
+  
+#latent variable intercepts
+   eta1~0*1 #for scaling
+   eta2~1
+   eta3~1
+  
+  
+# observed variable intercepts
+flanker_T1 ~ i1*1
+wm_T1 ~ i21*1
+picvocab_T1 ~ i31*1
+reading_T1 ~ i41*1
+picture_T1 ~ i51*1
+pattern_T1 ~ i61*1
+
+flanker_T2 ~ i1*1
+wm_T2 ~ i22*1
+picvocab_T2 ~ i32*1
+reading_T2 ~ i42*1
+picture_T2 ~ i52*1
+pattern_T2 ~ i62*1
+
+flanker_T3 ~ i1*1
+wm_T3 ~ i23*1
+picvocab_T3 ~ i33*1
+reading_T3 ~ i43*1
+picture_T3 ~ i53*1
+pattern_T3 ~ i63*1  
+' 
+
+fit_weak <- lavaan(weak_invar, data = full_scores_wide, missing='fiml', estimator='mlr')
+summary(fit_weak, fit.measures = TRUE, standardized = TRUE)
+
+
+strong_invar <- ' #opening quote
+#factor loadings
+  eta1 =~ lambda_Flank*flanker_T1+ #for identification
+          lambda_WM*wm_T1+ 
+          lambda_PicVoc*picvocab_T1 +
+          lambda_Read*reading_T1+
+          lambda_Pict*picture_T1+
+          lambda_Pattern*pattern_T1
+          
+  eta2 =~ lambda_Flank*flanker_T2+ #for identification
+          lambda_WM*wm_T2+ 
+          lambda_PicVoc*picvocab_T2+
+          lambda_Read*reading_T2+
+          lambda_Pict*picture_T2+
+          lambda_Pattern*pattern_T2
+          
+  eta3 =~ lambda_Flank*flanker_T3+ #for identification
+          lambda_WM*wm_T3+ 
+          lambda_PicVoc*picvocab_T3+
+          lambda_Read*reading_T3+
+          lambda_Pict*picture_T3+
+          lambda_Pattern*pattern_T3
+                       
+#latent variable variances
+   eta1~~1*eta1 #for scaling
+   eta2~~eta2
+   eta3~~eta3
+   
+#latent variable covariances
+   eta1~~eta2
+   eta1~~eta3
+   eta2~~eta3
+   
+# Unique Variances
+  flanker_T1 ~~ flanker_T1
+  wm_T1 ~~ wm_T1
+  picvocab_T1 ~~ picvocab_T1
+  reading_T1 ~~ reading_T1
+  picture_T1 ~~ picture_T1
+  pattern_T1 ~~ pattern_T1
+  
+  flanker_T2 ~~ flanker_T2
+  wm_T2 ~~ wm_T2
+  picvocab_T2 ~~ picvocab_T2
+  reading_T2 ~~ reading_T2
+  picture_T2 ~~ picture_T2
+  pattern_T2 ~~ pattern_T2
+  
+  flanker_T3 ~~ flanker_T3
+  wm_T3 ~~ wm_T3
+  picvocab_T3 ~~ picvocab_T3
+  reading_T3 ~~ reading_T3
+  picture_T3 ~~ picture_T3
+  pattern_T3 ~~ pattern_T3
+  
+# whoopsi daisies "correlated uniquenesses"/unique covariances
+flanker_T1 ~~ flanker_T2 + flanker_T3
+flanker_T2 ~~ flanker_T3
+wm_T1 ~~ wm_T2 + wm_T3
+wm_T2 ~~ wm_T3
+picvocab_T1 ~~ picvocab_T2 + picvocab_T3
+picvocab_T2 ~~ picvocab_T3
+reading_T1 ~~ reading_T2 + reading_T3
+reading_T2 ~~ reading_T3
+picture_T1 ~~ picture_T2 + picture_T3
+picture_T2 ~~ picture_T3
+pattern_T1 ~~ pattern_T2 + pattern_T3
+pattern_T2 ~~ pattern_T3  
+  
+  
+  
+#latent variable intercepts
+   eta1~0*1 #for scaling
+   eta2~1
+   eta3~1
+  
+  
+# observed variable intercepts
+flanker_T1 ~ i1*1
+wm_T1 ~ i2*1
+picvocab_T1 ~ i3*1
+reading_T1 ~ i4*1
+picture_T1 ~ i5*1
+pattern_T1 ~ i6*1
+
+flanker_T2 ~ i1*1
+wm_T2 ~ i2*1
+picvocab_T2 ~ i3*1
+reading_T2 ~ i4*1
+picture_T2 ~ i5*1
+pattern_T2 ~ i6*1
+
+flanker_T3 ~ i1*1
+wm_T3 ~ i2*1
+picvocab_T3 ~ i3*1
+reading_T3 ~ i4*1
+picture_T3 ~ i5*1
+pattern_T3 ~ i6*1  
+' 
+
+fit_strong <- lavaan(strong_invar, data = full_scores_wide, missing='fiml', estimator='mlr')
+summary(fit_strong, fit.measures = TRUE, standardized = TRUE)
+
+
+anova(fit_weak, fit_strong)
+
+strong_invar_LGC <- ' #opening quote
+#factor loadings
+  eta1 =~ 4.570*flanker_T1+ #for identification
+          lambda_WM*wm_T1+ 
+          lambda_PicVoc*picvocab_T1 +
+          lambda_Read*reading_T1+
+          lambda_Pict*picture_T1+
+          lambda_Pattern*pattern_T1
+          
+  eta2 =~ 4.570*flanker_T2+ #for identification
+          lambda_WM*wm_T2+ 
+          lambda_PicVoc*picvocab_T2+
+          lambda_Read*reading_T2+
+          lambda_Pict*picture_T2+
+          lambda_Pattern*pattern_T2
+          
+  eta3 =~ 4.570*flanker_T3+ #for identification
+          lambda_WM*wm_T3+ 
+          lambda_PicVoc*picvocab_T3+
+          lambda_Read*reading_T3+
+          lambda_Pict*picture_T3+
+          lambda_Pattern*pattern_T3
+                       
+#latent variable variances
+   eta1~~psi*eta1 #for scaling
+   eta2~~psi*eta2
+   eta3~~psi*eta3
+   
+#latent variable covariances
+   eta1~~0*eta2 #fixed to zero 
+   eta1~~0*eta3
+   eta2~~0*eta3
+   
+# Unique Variances
+  flanker_T1 ~~ flanker_T1
+  wm_T1 ~~ wm_T1
+  picvocab_T1 ~~ picvocab_T1
+  reading_T1 ~~ reading_T1
+  picture_T1 ~~ picture_T1
+  pattern_T1 ~~ pattern_T1
+  
+  flanker_T2 ~~ flanker_T2
+  wm_T2 ~~ wm_T2
+  picvocab_T2 ~~ picvocab_T2
+  reading_T2 ~~ reading_T2
+  picture_T2 ~~ picture_T2
+  pattern_T2 ~~ pattern_T2
+  
+  flanker_T3 ~~ flanker_T3
+  wm_T3 ~~ wm_T3
+  picvocab_T3 ~~ picvocab_T3
+  reading_T3 ~~ reading_T3
+  picture_T3 ~~ picture_T3
+  pattern_T3 ~~ pattern_T3
+  
+# whoopsi daisies "correlated uniquenesses"/unique covariances
+flanker_T1 ~~ flanker_T2 + flanker_T3
+flanker_T2 ~~ flanker_T3
+wm_T1 ~~ wm_T2 + wm_T3
+wm_T2 ~~ wm_T3
+picvocab_T1 ~~ picvocab_T2 + picvocab_T3
+picvocab_T2 ~~ picvocab_T3
+reading_T1 ~~ reading_T2 + reading_T3
+reading_T2 ~~ reading_T3
+picture_T1 ~~ picture_T2 + picture_T3
+picture_T2 ~~ picture_T3
+pattern_T1 ~~ pattern_T2 + pattern_T3
+pattern_T2 ~~ pattern_T3  
+  
+  
+  
+#latent variable intercepts
+   eta1~0*1 #fixed to zero 
+   eta2~0*1
+   eta3~0*1
+  
+  
+# observed variable intercepts
 flanker_T1 ~ i1*1
 wm_T1 ~ i2*1
 picvocab_T1 ~ i3*1
@@ -311,48 +587,25 @@ reading_T3 ~ i4*1
 picture_T3 ~ i5*1
 pattern_T3 ~ i6*1
 
-# Unique Variances
-flanker_T1 ~~ u1*flanker_T1
-wm_T1 ~~ u2*wm_T1
-picvocab_T1 ~~ u3*picvocab_T1
-reading_T1 ~~ u4*reading_T1
-picture_T1 ~~ u5*picture_T1
-pattern_T1 ~~ u6*pattern_T1
 
-flanker_T2 ~~ u1*flanker_T2
-wm_T2 ~~ u2*wm_T2
-picvocab_T2 ~~ u3*picvocab_T2
-reading_T2 ~~ u4*reading_T2
-picture_T2 ~~ u5*picture_T2
-pattern_T2 ~~ u6*pattern_T2
-
-flanker_T3 ~~ u1*flanker_T3
-wm_T3 ~~ u2*wm_T3
-picvocab_T3 ~~ u3*picvocab_T3
-reading_T3 ~~ u4*reading_T3
-picture_T3 ~~ u5*picture_T3
-pattern_T3 ~~ u6*pattern_T3
-
-# whoopsi daisies "correlated uniquenesses"
-# only works with this
-
-flanker_T1 ~~ flanker_T2 + flanker_T3
-flanker_T2 ~~ flanker_T3
-wm_T1 ~~ wm_T2 + wm_T3
-wm_T2 ~~ wm_T3
-picvocab_T1 ~~ picvocab_T2 + picvocab_T3
-picvocab_T2 ~~ picvocab_T3
-reading_T1 ~~ reading_T2 + reading_T3
-reading_T2 ~~ reading_T3
-picture_T1 ~~ picture_T2 + picture_T3
-picture_T2 ~~ picture_T3
-pattern_T1 ~~ pattern_T2 + pattern_T3
-pattern_T2 ~~ pattern_T3
+#second-order latent basis growth
+  #growth factors
+   xi_1 =~ 1*eta1+ #intercept factor
+           1*eta2+
+           1*eta3
+   xi_2 =~ 0*eta1  #latent basis slope factor
+           +start(0.5)*eta2
+           +1*eta3
+  #factor variances & covariance
+    xi_1~~start(.8)*xi_1
+    xi_2~~start(.5)*xi_2
+    xi_1~~start(0)*xi_2
+  #factor intercepts
+    xi_1~0*1
+    xi_2~1
 '
-fit_strict <- cfa(strict, data = full_scores_wide, missing='fiml', estimator='mlr')
-summary(fit_strict, fit.measures = TRUE, standardized = TRUE)
+fit_strong_invar_LGC <- lavaan(strong_invar_LGC, data = full_scores_wide, missing='fiml', estimator='mlr')
 
-
-
+summary(fit_strong_invar_LGC, fit.measures = TRUE, standardized = TRUE)
 
 
