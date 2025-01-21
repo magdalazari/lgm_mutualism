@@ -35,50 +35,11 @@ If 20 correct responses are "guaranteed" (not included in the raw score) the rem
 Model specifiication and fit (for constrained):
 Assuming data was missing completely at random so we use FIML to impute missing data.
 Having only 3 timepoints means that the basis model has 0 degrees of freedom, the model is saturated/just-identified. To make model comparison possible, we constrained the residual error variances (*a) for the 3 timepoints (obs variables) ("growth" by default uniquely estimates each one) and got 2 df more. 
+After model comparison, basis was better for all of the domains except picture, but after freeing the error variances, model comparison showed  that basis was best (no fit indices but model comparison is still informative). 
+Current problems: 
+1) lavaan std.all and predict() correlations are not very high
+2) Covariance matrix is not positive for all 6 domains 
+We tried: including only complete cases, removing domains (if we remove wm and pattern they seem okay)
 
-Picture vocabulary 
-Linear: CFI: 0.998  TLI: 0.998   RMSEA: 0.029   SRMR: 0.019
-Basis: CFI: 0.998  TLI: 0.998   RMSEA: 0.028   SRMR: 0.018
-anova: basis has lower AIC and BIC and significant χ2 diff value, which means that the basis model fits significantly better and the extra parameter estimation is worth it.
 
-Basis is better (indices and comparison): mean score at baseline 
-mean rate of change 
-between-person variability at baseline 
-between-person variability in rate of change 
-how does baseline associate with rate of development?
-how much of the variance is not explained by the latent factor?
 
-Flanker 
-Linear: CFI: 0.904  TLI: 0.904   RMSEA: 0.085   SRMR: 0.036
-Basis: CFI: 0.969  TLI: 0.953   RMSEA: 0.059   SRMR: 0.035
-anova: basis has lower AIC and BIC and fits significantly better 
-
-Basis is better (indices and comparison) 
-
-Pattern
-Linear: CFI: 0.966  TLI: 0.966   RMSEA: 0.057   SRMR: 0.065
-Basis: CFI: 0.997  TLI: 0.996   RMSEA: 0.020   SRMR: 0.010
-anova: basis has lower AIC and BIC and fits significantly better 
-
-Basis is better (indices and comparison)
-
-Picture
-Linear: CFI: 0.884  TLI: 0.884   RMSEA: 0.101   SRMR: 0.059
-Basis: CFI: 0.332  TLI: -0.002   RMSEA: 0.297   SRMR: 0.182
-anova: linear has lower AIC and BIC, non significant chi sq difference  
-
-Linear ia better (indices are not good, but lower chsq diff. This means that both models fit equally well, so the freely estimated parameters could be fixed and the nested model could be accepted) 
-
-Reading 
-Linear: CFI: 0.420  TLI: 0.420   RMSEA: 0.457   SRMR: 0.333
-Basis: CFI: 0.995  TLI: 0.992   RMSEA: 0.053   SRMR: 0.026
-anova: basis has lower AIC and BIC, basis fits significantly better
-
-Basis is better (much better indices and comparison)
-
-Working memory
-The slope variance was negative/0 (Heywood case), so 1. wm*100 2. freed error variance constraints.
-Basis is better than linear. 
-
-Correlations between the growth parameters:
-Slopes: 
