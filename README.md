@@ -41,5 +41,6 @@ Current problems:
 2) Covariance matrix is not positive for all 6 domains 
 We tried: including only complete cases, removing domains (if we remove wm and pattern they seem okay)
 
-
+I fixed the slope variance in 0 and then 1 for 1 task and the model with the freely estimated is significantly better in both cases (within task)
+ freely estimated slope variance is better for all tasks (that means there is meaningful interindividual differences in trajectories across cognitive tasks)
 
