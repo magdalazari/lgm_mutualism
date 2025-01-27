@@ -35,11 +35,15 @@ Model specifiication and fit:
 
 2. Having only 3 timepoints means that the basis model has 0 degrees of freedom, making it saturated/just-identified. To make model comparison possible, we constrained the residual error variances within each domain (*a for the 3 timepoints) ("growth" by default uniquely estimates each one) and got 2 df more.
 
-3. Anova() showed that basis was better for all of the domains except picture, but after freeing the error variances, model comparison showed that basis was best (no fit indices but model comparison is still informative). 
+3. Due to negative value in working memory output, freed error variance. 
 
-4. Used predict() to extract intercept and slope estimates for each participant for each cognitive domain/model seperately, joiined them into a data frame and correlated them.
+4. Anova() showed that basis was better for all of the domains except picture, but after freeing the error variances, model comparison showed that basis was best (no fit indices but model comparison is still informative).
 
-5. Result: very small correlations in slope-slope (the int-int were better). To troubleshoot, we compared the basis model (with constrained error var) to a basis model that in addition had the slope variance fixed to 0 (testing for interindividual differences in the slope). Anova showed that the one with the freely estimated slope variance was better for all domains, so the slopes interindividual diff were meaningful. #much less variance in the slope when variance is unconstrained 
+5. So we work with: 6 domains, all basis models, all error variances fixed except for working memory and pattern. 
+
+6. Used predict() to extract intercept and slope estimates for each participant for each cognitive domain/model seperately, joiined them into a data frame and correlated them.
+
+7. Result: very small correlations in slope-slope (the int-int were better). To troubleshoot, we compared the basis model (with constrained error var) to a basis model that in addition had the slope variance fixed to 0 (testing for interindividual differences in the slope). Anova showed that the one with the freely estimated slope variance was better for all domains, so the slopes interindividual diff were meaningful. #much less variance in the slope when variance is unconstrained 
 
 Next problem: 
 1) lavaan std.all and predict() correlations are not very high. 
