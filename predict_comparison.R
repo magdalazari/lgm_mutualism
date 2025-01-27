@@ -266,6 +266,11 @@ diag(as.matrix(correlation_slopes))
 correlation_intercepts<-correlation[c(1,3,5,7,9,11), c(1,3,5,7,9,11)]
 diag(as.matrix(correlation_intercepts))
 
+correlation_intercepts_slopes<-correlation[c(1,3,5,7,9,11), c(2,4,6,8,10,12)]
+diag(as.matrix(correlation_intercepts_slopes))
+
+correlation_intercepts_slopes2<-correlation[c(2,4,6,8,10,12), c(1,3,5,7,9,11)]
+diag(as.matrix(correlation_intercepts_slopes2))
 
 ######### Doing the same but excluding working memory to check improvement 
 list_scores_nowm = list(predict_picvocab, predict_flanker, predict_pattern, predict_picture, predict_reading)
