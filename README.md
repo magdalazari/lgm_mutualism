@@ -32,28 +32,28 @@ results: picture: 0.97, pattern: 0.99, flanker: 0.35 (because raw uses only accu
 
 Model specifiication and fit:
 
-1. Specified a linear and basis model for each cognitive domain seperately to select ideal (first just an intercept and slope).
+1. Specified a linear and basis model for each cognitive domain seperately to select ideal (first just an intercept and slope, free err var).
 
 2. Basis was better for all except Picture Seq Memory. 
 
 3. Having only 3 timepoints means that the basis model has 0 degrees of freedom, making it saturated/just-identified. To make model comparison possible, we constrained the residual error variances within each domain for both linear and basis (*a for the 3 timepoints) ("growth" by default uniquely estimates each one) and got 2 df more.
 
-4. Due to negative value in the v-cov of working memory (H case, the standardized covariance between int and slope was below -1), a. rescaled (*100) b.freed error variance.
+4. Compared Picture seq linear and basis again with freed error var and basis was better. 
 
-5. Linear seemed to be best for Picture seq, but compared again with freed error var and basis was better. 
+5. Due to negative value in the v-cov of working memory (H case, the standardized covariance between int and slope was below -1), a. rescaled (*100) b.freed error variance.
 
 6. Anova() showed that basis was better for all of the domains (free error var for 2/6 domains), so worked with: 6 domains, all basis models, all error variances fixed except for working memory and picture. 
 
-8. Used predict() to extract intercept and slope estimates for each participant for each cognitive domain/model seperately, joiined them into a data frame and correlated them.
+8. Used predict() to extract intercept and slope estimates for each participant for each cognitive domain/model seperately, joiined them into a data frame and correlated them. Result: very low correlations between slope-slope for every pair of tasks (the int-int were higher). To better understand what is happening (we expected higher correlations), we compared the basis model (with constrained error var) to a basis model that in addition had the slope variance fixed to 0 (testing for interindividual differences in the slope). Anova() showed that the one with the freely estimated slope variance was better for all domains, so the slopes interindividual diff were meaningful. Less variance in the slope when variance is unconstrained.
 
-9. Result: very low correlations in slope-slope (the int-int were better). To troubleshoot, we compared the basis model (with constrained error var) to a basis model that in addition had the slope variance fixed to 0 (testing for interindividual differences in the slope). Anova showed that the one with the freely estimated slope variance was better for all domains, so the slopes interindividual diff were meaningful. #much less variance in the slope when variance is unconstrained 
+9. Next, to examine what is going on we combined models from individual domains in one (tried fluid-fluid and cryst-cryst: flanker-working memory, picvocab-reading), aiming to combine all 6 domains in 1 model. 
 
-Next problem: 
-1) lavaan std.all and predict() correlations are not very high. 
+Problems after that: 
 
+1) lavaan std.all and predict() correlations are very different, esp for slopes. So we tried (troubleshooting script):
+- Reading and Picvocav: made both linear and basis model, keeping only complete cases. Compared the std.all estimations to the individual predict estimations and they were still different. 
 
-
-2) Covariance matrix is not positive for all 6 domains 
+3) Covariance matrix is not positive for all 6 domains 
 We tried: including only complete cases, removing domains (if we remove wm and pattern they seem okay)
 
 I fixed the slope variance in 0 and then 1 for 1 task and the model with the freely estimated is significantly better in both cases (within task)
