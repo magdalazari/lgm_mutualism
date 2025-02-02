@@ -19,31 +19,34 @@ task remotely and we did not administer it. -> so people who are remote did not 
 
 
 Data cleaning steps/notes:
-1. Only 3 tests had raw scores available, so checked for the correlations between raw and uncorrected (the 2 types that ABCD recommends) at T_1.
-results: picture: 0.97, pattern: 0.99, flanker: 0.35 (because raw uses only accuray, uncorrected includes rt for people scoring more than 80%, mentioned in manual and obvious when plotted, since 80% of 40 trials = 32 correct responses.
 
-3. Flanker explained: If 20 correct responses are "guaranteed" (not included in the raw score) the remaining 12 (32 - 20) becomes the point at which the uncorrected score starts incorporating reaction times for accuracy higher than 80%, as participants have a baseline of 20 correct answers, so achieving 80% accuracy (32 correct) requires 12 additional correct responses, and this cutoff reflects on the graph, where 12 on the raw score axis aligns with the transition where reaction time likely starts influencing scores, Once you achieve the 12 additional correct answers (so hit 80% accuracy), reaction times start being factored into the score (which adds new types of variation)
+1. Only 3 tests had raw scores available, so checked for the within test correlations between raw and uncorrected (the 2 types that ABCD recommends) at T_1.
+results: picture: 0.97, pattern: 0.99, flanker: 0.35 (because raw uses only accuracy, uncorrected includes rt for people scoring more than 80% (to manage ceiling), mentioned in manual and obvious when plotted, since 80% of 40 trials = 32 correct responses.
 
-3. Compared 3 wm tasks (tfmri_nb_all_beh_ctotal_rate(=rate of correct responses), tfmri_nb_all_beh_c0b_mrt (=Average reaction time for all correct responses to 0 back stimuli during run 1 and run 2), tfmri_nb_all_beh_c2b_mrt (=Average reaction time for all correct responses to 2 back stimuli during run 1 and run 2) to List from NIHtb and ravens matrices and the highest correlations were between rate of correct response for both list and WISC (0.36), so this measure was selected.
+2. Flanker explained: If 20 correct responses are "guaranteed" (not included in the raw score) the remaining 12 (32 - 20) becomes the point at which the uncorrected score starts incorporating reaction times for accuracy higher than 80%, as participants have a baseline of 20 correct answers, so achieving 80% accuracy (32 correct) requires 12 additional correct responses, and this cutoff reflects on the graph, where 12 on the raw score axis aligns with the transition where reaction time likely starts influencing scores, Once you achieve the 12 additional correct answers (so hit 80% accuracy), reaction times start being factored into the score (which adds new types of variation).
+
+3. Compared 3 wm tasks (tfmri_nb_all_beh_ctotal_rate(=rate of correct responses), tfmri_nb_all_beh_c0b_mrt (=Average reaction time for all correct responses to 0 back stimuli during run 1 and run 2), tfmri_nb_all_beh_c2b_mrt (=Average reaction time for all correct responses to 2 back stimuli during run 1 and run 2) to List from NIHtb and ravens matrices and the highest correlations were between rate of correct response for both list and ravens, (0.36 for T_1), so this measure was selected.
    
 4. NDAR_INVA31C7WYJ was an outlier (180) in T_2 reading, but the rest of their scores looked normal, so I replaced with NA. 
 
 
 Model specifiication and fit:
 
-1. Specidied a linear and basis model for each cognitive domain seperately (intercept and slope)
+1. Specified a linear and basis model for each cognitive domain seperately to select ideal (first just an intercept and slope).
 
-2. Having only 3 timepoints means that the basis model has 0 degrees of freedom, making it saturated/just-identified. To make model comparison possible, we constrained the residual error variances within each domain (*a for the 3 timepoints) ("growth" by default uniquely estimates each one) and got 2 df more.
+2. Basis was better for all except Picture Seq Memory. 
 
-3. Due to negative value in working memory output, freed error variance. 
+3. Having only 3 timepoints means that the basis model has 0 degrees of freedom, making it saturated/just-identified. To make model comparison possible, we constrained the residual error variances within each domain for both linear and basis (*a for the 3 timepoints) ("growth" by default uniquely estimates each one) and got 2 df more.
 
-4. Anova() showed that basis was better for all of the domains except picture, but after freeing the error variances, model comparison showed that basis was best (no fit indices but model comparison is still informative).
+4. Due to negative value in the v-cov of working memory (H case, the standardized covariance between int and slope was below -1), a. rescaled (*100) b.freed error variance.
 
-5. So we work with: 6 domains, all basis models, all error variances fixed except for working memory and pattern. 
+5. Linear seemed to be best for Picture seq, but compared again with freed error var and basis was better. 
 
-6. Used predict() to extract intercept and slope estimates for each participant for each cognitive domain/model seperately, joiined them into a data frame and correlated them.
+6. Anova() showed that basis was better for all of the domains (free error var for 2/6 domains), so worked with: 6 domains, all basis models, all error variances fixed except for working memory and picture. 
 
-7. Result: very small correlations in slope-slope (the int-int were better). To troubleshoot, we compared the basis model (with constrained error var) to a basis model that in addition had the slope variance fixed to 0 (testing for interindividual differences in the slope). Anova showed that the one with the freely estimated slope variance was better for all domains, so the slopes interindividual diff were meaningful. #much less variance in the slope when variance is unconstrained 
+8. Used predict() to extract intercept and slope estimates for each participant for each cognitive domain/model seperately, joiined them into a data frame and correlated them.
+
+9. Result: very low correlations in slope-slope (the int-int were better). To troubleshoot, we compared the basis model (with constrained error var) to a basis model that in addition had the slope variance fixed to 0 (testing for interindividual differences in the slope). Anova showed that the one with the freely estimated slope variance was better for all domains, so the slopes interindividual diff were meaningful. #much less variance in the slope when variance is unconstrained 
 
 Next problem: 
 1) lavaan std.all and predict() correlations are not very high. 
