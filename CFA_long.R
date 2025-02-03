@@ -566,26 +566,49 @@ pattern_T2 ~~ pattern_T3
   
   
 # observed variable intercepts
+# flanker_T1 ~ i1*1
+# wm_T1 ~ i2*1
+# picvocab_T1 ~ i3*1
+# reading_T1 ~ i4*1
+# picture_T1 ~ i5*1
+# pattern_T1 ~ i6*1
+# 
+# flanker_T2 ~ i1*1
+# wm_T2 ~ i2*1
+# picvocab_T2 ~ i3*1
+# reading_T2 ~ i4*1
+# picture_T2 ~ i5*1
+# pattern_T2 ~ i6*1
+# 
+# flanker_T3 ~ i1*1
+# wm_T3 ~ i2*1
+# picvocab_T3 ~ i3*1
+# reading_T3 ~ i4*1
+# picture_T3 ~ i5*1
+# pattern_T3 ~ i6*1
+
+
+# observed variable intercepts (Free/weak specification)
 flanker_T1 ~ i1*1
-wm_T1 ~ i2*1
-picvocab_T1 ~ i3*1
-reading_T1 ~ i4*1
-picture_T1 ~ i5*1
-pattern_T1 ~ i6*1
+wm_T1 ~ 1
+picvocab_T1 ~ 1
+reading_T1 ~ 1
+picture_T1 ~ 1
+pattern_T1 ~ 1
 
 flanker_T2 ~ i1*1
-wm_T2 ~ i2*1
-picvocab_T2 ~ i3*1
-reading_T2 ~ i4*1
-picture_T2 ~ i5*1
-pattern_T2 ~ i6*1
+wm_T2 ~ 1
+picvocab_T2 ~ 1
+reading_T2 ~ 1
+picture_T2 ~ 1
+pattern_T2 ~ 1
 
 flanker_T3 ~ i1*1
-wm_T3 ~ i2*1
-picvocab_T3 ~ i3*1
-reading_T3 ~ i4*1
-picture_T3 ~ i5*1
-pattern_T3 ~ i6*1
+wm_T3 ~ 1
+picvocab_T3 ~ 1
+reading_T3 ~ 1
+picture_T3 ~ 1
+pattern_T3 ~ 1
 
 
 #second-order latent basis growth
