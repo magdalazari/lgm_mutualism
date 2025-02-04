@@ -1,5 +1,5 @@
 Data from: 
-A. ABCD neurocognition (Shared\abcd-data-release-5.1\core\neurocognition\nc_y_nihtb) -> NIH Toolbox (5 tests administered at baseline, 2nd and 4th year, all of them administered in English). Included: 
+A. ABCD neurocognition (Shared\abcd-data-release-5.1\core\neurocognition\nc_y_nihtb) -> NIH Toolbox (5 tests administered at baseline, 2nd and 4th year, administered in English). Included: 
 1. Picture Vocabulary (component of the Crystallized Composite Score)
 2. Flanker Inhibitory Control & Attention (component of the Fluid Composite Score) (remote assessments used a replicated Flanker task -Inquisit platform-)
 3. Picture Sequence Memory (component of the Fluid Composite Score)
@@ -11,19 +11,30 @@ Rate of correct responses in fMRI n-back working memory task
 
 Number of participants included/event: baseline: 11868, 2-year follow-up:	10973, 4-year follow-up: 4754.
 
-Notes:
--Remote assessments in the 2-year and 4-year follow-up protocols used a Flanker task using the Inquisit system from Millisecond. This task was designed to mimic the NIH Toolbox Flanker task as closely as possible.
+Notes on tasks:
+1. NIHToolbox: 6 types of scores (ABCD recommends using uncorrected or raw scores for longitudinal analyses): 
+-age corrected (compares the score of the test-taker to those in the NIH Toolbox nationally representative normative sample at the same age).
+-uncorrected (uses a standard score metric. It compares the performance of the test-taker to those in the entire NIH Toolbox nationally representative normative sample, regardless of age/any other variable. May be of interest when monitoring performance over time).
+-raw (not available for 2/5 tests, picture vocabulary and reading). 
+-theta (calculated for each participant; it represents their relative overall ability/performance. Very similar to a z-score.
+-computed(They only explain it for the Flanker test (the Flanker Computed score provides a way of gauging raw improvement or decline from Time 1 to Time 2). 
+-fully-corrected T-score (compare the score of the test-taker to those in the NIH Toolbox nationally representative normative sample, while adjusting for demographic variables (include age, gender, race/ethnicity,educational attainment) collected during the NIH Toolbox national norming study. They provide this score to allow for comparison within a narrower grouping).
+
+2. The Fluid Intelligence and Total Composite scores were not calculated for every wave because they include 2 tests that were not followed up.
+
+2. Flanker: -Remote assessments in the 2-year and 4-year follow-up protocols used a Flanker task using the Inquisit system from Millisecond. This task was designed to mimic the NIH Toolbox Flanker task as closely as possible. Not all assessments happened remote/hybrid for the last 2 waves, so some subjects have one version and some the other. 
+- Low correlations between raw and uncorrected Flanker: Raw scores represent just accuracy, uncorrected include rt for people scoring more than 80% (to manage ceiling eff), mentioned in manual and obvious when plotted, since 80% of 40 trials = 32 correct responses.
+If 20 correct responses are "guaranteed" (not included in the raw score) the remaining 12 (32 - 20) becomes the point at which the uncorrected score starts incorporating reaction times for accuracy higher than 80%, as participants have a baseline of 20 correct answers, so achieving 80% accuracy (32 correct) requires 12 additional correct responses, and this cutoff reflects on the graph, where 12 on the raw score axis aligns with the transition where reaction time likely starts influencing scores, Once you achieve the 12 additional correct answers (so hit 80% accuracy), reaction times start being factored into the score (which adds new types of variation).
 
 -In T_2 follow-up assessment it was not possible to administer NIH Toolbox Pattern Comparison Processing Speed
-task remotely and we did not administer it. -> so people who are remote did not participate in  T2, bias?
+task remotely and it was not administered -> so people who are remote did not have a score in pattern T2
 
 
 Data cleaning steps/notes:
 
 1. Only 3 tests had raw scores available, so checked for the within test correlations between raw and uncorrected (the 2 types that ABCD recommends) at T_1.
-results: picture: 0.97, pattern: 0.99, flanker: 0.35 (because raw uses only accuracy, uncorrected includes rt for people scoring more than 80% (to manage ceiling), mentioned in manual and obvious when plotted, since 80% of 40 trials = 32 correct responses.
+results: picture: 0.97, pattern: 0.99, flanker: 0.35 
 
-2. Flanker explained: If 20 correct responses are "guaranteed" (not included in the raw score) the remaining 12 (32 - 20) becomes the point at which the uncorrected score starts incorporating reaction times for accuracy higher than 80%, as participants have a baseline of 20 correct answers, so achieving 80% accuracy (32 correct) requires 12 additional correct responses, and this cutoff reflects on the graph, where 12 on the raw score axis aligns with the transition where reaction time likely starts influencing scores, Once you achieve the 12 additional correct answers (so hit 80% accuracy), reaction times start being factored into the score (which adds new types of variation).
 
 3. Compared 3 wm tasks (tfmri_nb_all_beh_ctotal_rate(=rate of correct responses), tfmri_nb_all_beh_c0b_mrt (=Average reaction time for all correct responses to 0 back stimuli during run 1 and run 2), tfmri_nb_all_beh_c2b_mrt (=Average reaction time for all correct responses to 2 back stimuli during run 1 and run 2) to List from NIHtb and ravens matrices and the highest correlations were between rate of correct response for both list and ravens, (0.36 for T_1), so this measure was selected.
    
