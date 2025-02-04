@@ -70,6 +70,9 @@ We tried: including only complete cases, removing domains (if we remove wm and p
 I fixed the slope variance in 0 and then 1 for 1 task and the model with the freely estimated is significantly better in both cases (within task)
  freely estimated slope variance is better for all tasks (that means there is meaningful interindividual differences in trajectories across cognitive tasks)
 
+
+At some point tried a model with correlated error variances within time points (picvocab_T1~~flanker_T1) but there are better ways to approach it probably.
+
  ###########################################################
  Before selecting A and B, I tried:
  -the Little man task was also administered in baseline, 2nd and 4th year, but: when administered in the baseline assessment a customized program designed by ABCD was used, whereas in (all) the 2-year and 4-year follow-up assessments a task presented in the Inquisit system from Millisecond was used. Testing: not great correlation between timepoints, esp 1-2 (.016), but 1-3 was good (.47). Generally weird to plot.
