@@ -32,7 +32,7 @@ If 20 correct responses are "guaranteed" (not included in the raw score) the rem
 task remotely and it was not administered -> so people who are remote did not have a score in pattern T2
 
 
-Data cleaning steps/notes:
+Data cleaning steps/notes (data_cleaning script)
 
 1. Only 3 tests had raw scores available, so checked for the within test correlations between raw and uncorrected (the 2 types that ABCD recommends) at T_1.
 results: picture: 0.97, pattern: 0.99, flanker: 0.35 
@@ -43,7 +43,7 @@ results: picture: 0.97, pattern: 0.99, flanker: 0.35
 4. NDAR_INVA31C7WYJ was an outlier (180) in T_2 reading, but the rest of their scores looked normal, so I replaced with NA. 
 
 
-Model specifiication and fit:
+Model specifiication and fit (basis_vs_linear script):
 
 1. Specified a linear and basis model for each cognitive domain seperately to select ideal (first just an intercept and slope, free err var).
 
@@ -57,20 +57,19 @@ Model specifiication and fit:
 
 6. Anova() showed that basis was better for all of the domains (free error var for 2/6 domains), so worked with: 6 domains, all basis models, all error variances fixed except for working memory and picture. 
 
-8. Used predict() to extract intercept and slope estimates for each participant for each cognitive domain/model seperately, joiined them into a data frame and correlated them. Result: very low correlations between slope-slope for every pair of tasks (the int-int were higher). To better understand what is happening (we expected higher correlations), we compared the basis model (with constrained error var) to a basis model that in addition had the slope variance fixed to 0 (testing for interindividual differences in the slope). Anova() showed that the one with the freely estimated slope variance was better for all domains, so the slopes interindividual diff were meaningful. Less variance in the slope when variance is unconstrained.
-
-9. Next, to examine what is going on we combined models from individual domains in one (tried fluid-fluid and cryst-cryst: flanker-working memory, picvocab-reading), aiming to combine all 6 domains in 1 model. 
+8. Used predict() to extract intercept and slope estimates for each participant for each cognitive domain/model seperately, joined them into a data frame and correlated them (int-int, sl-sl, int-sl between tasks). Result: very low correlations between slopes, higher between intercepts. Using just picvocab to test, the predicted slopes of a linear model correlated .99 with the basis. To better understand what is happening, since we expected higher (slope) correlations, we compared the basis model (with constrained error var) to a basis model that in addition had the slope variance fixed to 0 (testing for interindividual differences in the slope). Anova() showed that the one with the freely estimated slope variance was better for all domains, so the slopes interindividual diff were meaningful.
+   
+10. Next, to examine what is going on we combined the individual domain models in one, 6 domain model (large_model script)
 
 Problems after that: 
 
-1) lavaan std.all and predict() correlations are very different, esp for slopes. So we tried (troubleshooting script):
-- Reading and Picvocav: made both linear and basis model, keeping only complete cases. Compared the std.all estimations to the individual predict estimations and they were still different. 
+1) lavaan std.all and predict() correlations are very different, esp for slopes. So we checked:
+a. whether this difference was caused by missing cases/different estimation methods (troubleshooting script): fit linear and basis models for Reading and Picvocab, keeping only complete cases. Compared the std.all estimations to the individual predict estimations and they were still different.
+b. if the predict() estimations extracted from a large model (not individually estimated and joined in a df)(=approach A) correlated more with std.all estimations (=approach B). In the 6 domain model, they correlated 0.69, in the 4 domain (-wm and pattern) they correlated 0.93). When the predict() estimations were extracted for each domain seperately, for the 6 domain model approach A and B correlated 0.57, for a model without wm they correlated 0.65 and for a model without wm and pattern, 0.5. 
 
-3) Covariance matrix is not positive for all 6 domains 
-We tried: including only complete cases, removing domains (if we remove wm and pattern they seem okay)
 
-I fixed the slope variance in 0 and then 1 for 1 task and the model with the freely estimated is significantly better in both cases (within task)
- freely estimated slope variance is better for all tasks (that means there is meaningful interindividual differences in trajectories across cognitive tasks)
+
+3) Covariance matrix is not positive in a model with all 6 domains. Removing picture/pattern/working memory on their own did now help, but a model without working memory and pattern does not give warnings. 
 
 
 At some point tried a model with correlated error variances within time points (picvocab_T1~~flanker_T1) but there are better ways to approach it probably.
