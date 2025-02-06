@@ -1,9 +1,11 @@
 Data from: 
 A. ABCD neurocognition (Shared\abcd-data-release-5.1\core\neurocognition\nc_y_nihtb) -> NIH Toolbox (5 tests administered at baseline, 2nd and 4th year, administered in English). Included: 
-1. Picture Vocabulary (component of the Crystallized Composite Score)
+1. Picture Vocabulary: component of the Crystallized Composite Score, measure of receptive vocabulary, administered in a computerized adaptive format, scored using IRT. 
 2. Flanker Inhibitory Control & Attention (component of the Fluid Composite Score) (remote assessments used a replicated Flanker task -Inquisit platform-)
 3. Picture Sequence Memory (component of the Fluid Composite Score)
-4. Pattern Comparison Processing Speed (component of the Fluid Composite Score)
+   
+4. Pattern Comparison Processing Speed (component of the Fluid Composite Score): The participant’s raw score is the number of items answered correctly in 85 seconds of response time, with a range of 0-130. Higher scores = faster speed of processing within the normative standard being applied. To evaluate simple improvement or decline over time, one can use the raw score (range = 0-130) obtained on each assessment.
+   
 5. Oral Reading Recognition (component of the Crystallized Composite Score)
 
 B. ABCD imaging (Shared\abcd-data-release-5.1\core\imaging\mri_y_tfmr_nback_beh_workingmem- tfmri_nb_all_beh_ctotal_rate)
