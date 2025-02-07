@@ -78,7 +78,7 @@ Largest discrepancies between estimation methods (standard-SAM)
 # picvocab_slope-reading_slope:    0.55  0.93
 # picvocab_slope-picture_slope:   0.61  0.13
 # picture_intercept-picture_slope: -0.09 -0.41
-#pattern_intercept-pattern_slope:  -0.13 -0.40
+# pattern_intercept-pattern_slope:  -0.13 -0.40
 
 
 At some point tried a model with correlated error variances within time points (picvocab_T1~~flanker_T1) but there are better ways to approach it probably.
