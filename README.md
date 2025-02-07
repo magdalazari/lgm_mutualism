@@ -29,7 +29,7 @@ Notes on tasks:
 If 20 correct responses are "guaranteed" (not included in the raw score) the remaining 12 (32 - 20) becomes the point at which the uncorrected score starts incorporating reaction times for accuracy higher than 80%, as participants have a baseline of 20 correct answers, so achieving 80% accuracy (32 correct) requires 12 additional correct responses, and this cutoff reflects on the graph, where 12 on the raw score axis aligns with the transition where reaction time likely starts influencing scores, Once you achieve the 12 additional correct answers (so hit 80% accuracy), reaction times start being factored into the score (which adds new types of variation).
 
 -In T_2 follow-up assessment it was not possible to administer NIH Toolbox Pattern Comparison Processing Speed
-task remotely and it was not administered -> so people who are remote did not have a score in pattern T2
+task remotely and it was not administered -> so people who were remotely assesed do not have a score in pattern T2
 
 
 Data cleaning steps/notes (data_cleaning script)
@@ -61,12 +61,25 @@ Model specifiication and fit (basis_vs_linear script):
    
 10. Next, to examine what is going on we combined the individual domain models in one, 6 domain model (large_model script)
 
-1) Covariance matrix is not positive in a model with all 6 domains (basis, free er var for wm and picture). Removing picture/pattern/working memory on their own still gives error, but a model without working memory and pattern does not give warnings. Slope correlations are higher when error var is freed, but negative v-cov matrix. 
+1) Covariance matrix is not positive in a model with all 6 domains (basis, free er var for wm and picture). Removing picture/pattern/working memory on their own still gives error, but a model without working memory and pattern does not give warnings. Slope correlations are higher when error var is freed, but negative v-cov matrix (in a model without wm and pattern). 
 
 2) In the model without wm and pattern, noticed that lavaan std.all and predict() correlations are very different, esp for slopes. So we checked:
 a. whether this difference was caused by missing cases/different estimation methods (troubleshooting script): fit linear and basis models for Reading and Picvocab, keeping only complete cases. Compared the std.all estimations to the individual predict estimations (basis_vs_linear script) and they were still different.
-b. predict() estimations extracted from a large model vs predict estimations extracted from each domains model, individually. In the 6 domain model, large model predicts correlated with lavaan, 0.69 and in the 4 domain (-wm and pattern) they correlated 0.93. When the predict() estimations were extracted for each domain seperately, for the 6 domain model approach A and B correlated 0.57, for a model without wm they correlated 0.65 and for a model without wm and pattern, 0.5. 
+b. predict() estimations extracted from a large model vs predict estimations extracted from each domains model, individually. In the 6 domain model, large model predicts correlated with lavaan 0.69 and in the 4 domain (-wm and pattern) they correlated 0.93. When the predict() estimations were extracted for each domain seperately, for the 6 domain model approach A and B correlated 0.57, for a model without wm they correlated 0.65 and for a model without wm and pattern, 0.5. 
 (predict()=approach A, lavaan=approach B) 
+
+Decided to try a SAM approach (structure after measurement) instead of estimating everything at the same time, like in the standard SEM approach. SAM provides information on the reliability of latent variables. 
+Chose the basis model without working memory and free error var for picture. When comparing estimation methods, intercepts and int-slopes between domains were relatively conistent, while slopes differed, signs were the same between estimation methods. 
+Largest discrepancies between estimation methods (standard-SAM)
+# flanker_intercept-pattern_intercept: 0.63  0.49
+# flanker_slope-picture_slope:     0.23  0.04
+# picvocab_slope-reading_slope:    0.55  0.93
+# flanker_slope-pattern_slope:   0.78  0.36
+# picvocab_slope-reading_slope:    0.55  0.93
+# picvocab_slope-picture_slope:   0.61  0.13
+# picture_intercept-picture_slope: -0.09 -0.41
+#pattern_intercept-pattern_slope:  -0.13 -0.40
+
 
 At some point tried a model with correlated error variances within time points (picvocab_T1~~flanker_T1) but there are better ways to approach it probably.
 
