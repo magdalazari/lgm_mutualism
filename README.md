@@ -59,7 +59,7 @@ results: picture: 0.97, pattern: 0.99, flanker: 0.35
 
 8. Used predict() to extract intercept and slope estimates for each participant for each cognitive domain/model seperately, joined them into a data frame and correlated them (int-int, sl-sl, int-sl between tasks). Result: very low correlations between slopes, higher between intercepts. Using just picvocab to test, the predicted slopes of a linear model correlated .99 with the basis. To better understand what is happening, since we expected higher (slope) correlations, we compared the basis model (with constrained error var) to a basis model that in addition had the slope variance fixed to 0 (testing for interindividual differences in the slope). Anova() showed that the one with the freely estimated slope variance was better for all domains, so the slopes interindividual diff were meaningful.
    
-# To examine what is going on we combined the individual domain models in one, 6 domain model (large_model script)
+# Combining individual domain models in one, 6 domain model (large_model script)
 
 1) Covariance matrix is not positive in a model with all 6 domains (basis, free er var for wm and picture). Removing picture/pattern/working memory on their own still gives error, but a model without working memory and pattern does not give warnings. Slope correlations are higher when error var is freed, but negative v-cov matrix (in a model without wm and pattern). 
 
@@ -68,9 +68,10 @@ a. whether this difference was caused by missing cases/different estimation meth
 b. predict() estimations extracted from a large model vs predict estimations extracted from each domains model, individually. In the 6 domain model, large model predicts correlated with lavaan 0.69 and in the 4 domain (-wm and pattern) they correlated 0.93. When the predict() estimations were extracted for each domain seperately, for the 6 domain model approach A and B correlated 0.57, for a model without wm they correlated 0.65 and for a model without wm and pattern, 0.5. 
 (predict()=approach A, lavaan=approach B) 
 
-Decided to try a SAM approach (structure after measurement) instead of estimating everything at the same time, like in the standard SEM approach. SAM provides information on the reliability of latent variables. 
+# Trying a SAM approach (structure after measurement, SAM_model script)
+instead of estimating everything at the same time, like in the standard SEM approach. SAM provides information on the reliability of latent variables. 
 Chose the basis model without working memory and free error var for picture. When comparing estimation methods, intercepts and int-slopes between domains were relatively conistent, while slopes differed, signs were the same between estimation methods. 
-# Largest differences between estimation methods (std-SAM)
+Largest differences between estimation methods (std-SAM): 
 flanker_intercept-pattern_intercept: 0.63  0.49,
 flanker_slope-picture_slope:     0.23  0.04,
 picvocab_slope-reading_slope:    0.55  0.93,
