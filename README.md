@@ -61,16 +61,12 @@ Model specifiication and fit (basis_vs_linear script):
    
 10. Next, to examine what is going on we combined the individual domain models in one, 6 domain model (large_model script)
 
-Problems after that: 
+1) Covariance matrix is not positive in a model with all 6 domains (basis, free er var for wm and picture). Removing picture/pattern/working memory on their own still gives error, but a model without working memory and pattern does not give warnings. Slope correlations are higher when error var is freed, but negative v-cov matrix. 
 
-1) lavaan std.all and predict() correlations are very different, esp for slopes. So we checked:
-a. whether this difference was caused by missing cases/different estimation methods (troubleshooting script): fit linear and basis models for Reading and Picvocab, keeping only complete cases. Compared the std.all estimations to the individual predict estimations and they were still different.
-b. if the predict() estimations extracted from a large model (not individually estimated and joined in a df)(=approach A) correlated more with std.all estimations (=approach B). In the 6 domain model, they correlated 0.69, in the 4 domain (-wm and pattern) they correlated 0.93). When the predict() estimations were extracted for each domain seperately, for the 6 domain model approach A and B correlated 0.57, for a model without wm they correlated 0.65 and for a model without wm and pattern, 0.5. 
-
-
-
-3) Covariance matrix is not positive in a model with all 6 domains. Removing picture/pattern/working memory on their own did now help, but a model without working memory and pattern does not give warnings. 
-
+2) In the model without wm and pattern, noticed that lavaan std.all and predict() correlations are very different, esp for slopes. So we checked:
+a. whether this difference was caused by missing cases/different estimation methods (troubleshooting script): fit linear and basis models for Reading and Picvocab, keeping only complete cases. Compared the std.all estimations to the individual predict estimations (basis_vs_linear script) and they were still different.
+b. predict() estimations extracted from a large model vs predict estimations extracted from each domains model, individually. In the 6 domain model, large model predicts correlated with lavaan, 0.69 and in the 4 domain (-wm and pattern) they correlated 0.93. When the predict() estimations were extracted for each domain seperately, for the 6 domain model approach A and B correlated 0.57, for a model without wm they correlated 0.65 and for a model without wm and pattern, 0.5. 
+(predict()=approach A, lavaan=approach B) 
 
 At some point tried a model with correlated error variances within time points (picvocab_T1~~flanker_T1) but there are better ways to approach it probably.
 
