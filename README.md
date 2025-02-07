@@ -70,7 +70,7 @@ b. predict() estimations extracted from a large model vs predict estimations ext
 
 Decided to try a SAM approach (structure after measurement) instead of estimating everything at the same time, like in the standard SEM approach. SAM provides information on the reliability of latent variables. 
 Chose the basis model without working memory and free error var for picture. When comparing estimation methods, intercepts and int-slopes between domains were relatively conistent, while slopes differed, signs were the same between estimation methods. 
-Largest discrepancies between estimation methods (standard-SAM)
+# Largest discrepancies between estimation methods (standard-SAM)
 flanker_intercept-pattern_intercept: 0.63  0.49
 flanker_slope-picture_slope:     0.23  0.04
 picvocab_slope-reading_slope:    0.55  0.93
