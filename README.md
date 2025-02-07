@@ -32,7 +32,7 @@ If 20 correct responses are "guaranteed" (not included in the raw score) the rem
 task remotely and it was not administered -> so people who were remotely assesed do not have a score in pattern T2
 
 
-Data cleaning steps/notes (data_cleaning script)
+# Data cleaning steps/notes (data_cleaning script)
 
 1. Only 3 tests had raw scores available, so checked for the within test correlations between raw and uncorrected (the 2 types that ABCD recommends) at T_1.
 results: picture: 0.97, pattern: 0.99, flanker: 0.35 
@@ -43,7 +43,7 @@ results: picture: 0.97, pattern: 0.99, flanker: 0.35
 4. NDAR_INVA31C7WYJ was an outlier (180) in T_2 reading, but the rest of their scores looked normal, so I replaced with NA. 
 
 
-Model specifiication and fit (basis_vs_linear script):
+# Model specifiication and fit (basis_vs_linear script):
 
 1. Specified a linear and basis model for each cognitive domain seperately to select ideal (first just an intercept and slope, free err var).
 
@@ -59,7 +59,7 @@ Model specifiication and fit (basis_vs_linear script):
 
 8. Used predict() to extract intercept and slope estimates for each participant for each cognitive domain/model seperately, joined them into a data frame and correlated them (int-int, sl-sl, int-sl between tasks). Result: very low correlations between slopes, higher between intercepts. Using just picvocab to test, the predicted slopes of a linear model correlated .99 with the basis. To better understand what is happening, since we expected higher (slope) correlations, we compared the basis model (with constrained error var) to a basis model that in addition had the slope variance fixed to 0 (testing for interindividual differences in the slope). Anova() showed that the one with the freely estimated slope variance was better for all domains, so the slopes interindividual diff were meaningful.
    
-10. Next, to examine what is going on we combined the individual domain models in one, 6 domain model (large_model script)
+# To examine what is going on we combined the individual domain models in one, 6 domain model (large_model script)
 
 1) Covariance matrix is not positive in a model with all 6 domains (basis, free er var for wm and picture). Removing picture/pattern/working memory on their own still gives error, but a model without working memory and pattern does not give warnings. Slope correlations are higher when error var is freed, but negative v-cov matrix (in a model without wm and pattern). 
 
@@ -70,14 +70,14 @@ b. predict() estimations extracted from a large model vs predict estimations ext
 
 Decided to try a SAM approach (structure after measurement) instead of estimating everything at the same time, like in the standard SEM approach. SAM provides information on the reliability of latent variables. 
 Chose the basis model without working memory and free error var for picture. When comparing estimation methods, intercepts and int-slopes between domains were relatively conistent, while slopes differed, signs were the same between estimation methods. 
-# Largest discrepancies between estimation methods (standard-SAM)
-flanker_intercept-pattern_intercept: 0.63  0.49
-flanker_slope-picture_slope:     0.23  0.04
-picvocab_slope-reading_slope:    0.55  0.93
-flanker_slope-pattern_slope:   0.78  0.36
-picvocab_slope-reading_slope:    0.55  0.93
-picvocab_slope-picture_slope:   0.61  0.13
-picture_intercept-picture_slope: -0.09 -0.41
+# Largest differences between estimation methods (std-SAM)
+flanker_intercept-pattern_intercept: 0.63  0.49,
+flanker_slope-picture_slope:     0.23  0.04,
+picvocab_slope-reading_slope:    0.55  0.93,
+flanker_slope-pattern_slope:   0.78  0.36,
+picvocab_slope-reading_slope:    0.55  0.93,
+picvocab_slope-picture_slope:   0.61  0.13,
+picture_intercept-picture_slope: -0.09 -0.41,
 pattern_intercept-pattern_slope:  -0.13 -0.40
 
 
