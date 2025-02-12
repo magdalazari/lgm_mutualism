@@ -3,7 +3,6 @@ A. ABCD neurocognition (Shared\abcd-data-release-5.1\core\neurocognition\nc_y_ni
 1. Picture Vocabulary: component of the Crystallized Composite Score, measure of receptive vocabulary, administered in a computerized adaptive format, scored using IRT. 
 2. Flanker Inhibitory Control & Attention (component of the Fluid Composite Score) (remote assessments used a replicated Flanker task -Inquisit platform-)
 3. Picture Sequence Memory (component of the Fluid Composite Score)
-   
 4. Pattern Comparison Processing Speed (component of the Fluid Composite Score): The participant’s raw score is the number of items answered correctly in 85 seconds of response time, with a range of 0-130. Higher scores = faster speed of processing within the normative standard being applied. To evaluate simple improvement or decline over time, one can use the raw score (range = 0-130) obtained on each assessment.
    
 5. Oral Reading Recognition (component of the Crystallized Composite Score)
@@ -28,19 +27,21 @@ Notes on tasks:
 - Low correlations between raw and uncorrected Flanker: Raw scores represent just accuracy, uncorrected include rt for people scoring more than 80% (to manage ceiling eff), mentioned in manual and obvious when plotted, since 80% of 40 trials = 32 correct responses.
 If 20 correct responses are "guaranteed" (not included in the raw score) the remaining 12 (32 - 20) becomes the point at which the uncorrected score starts incorporating reaction times for accuracy higher than 80%, as participants have a baseline of 20 correct answers, so achieving 80% accuracy (32 correct) requires 12 additional correct responses, and this cutoff reflects on the graph, where 12 on the raw score axis aligns with the transition where reaction time likely starts influencing scores, Once you achieve the 12 additional correct answers (so hit 80% accuracy), reaction times start being factored into the score (which adds new types of variation).
 
--In T_2 follow-up assessment it was not possible to administer NIH Toolbox Pattern Comparison Processing Speed
-task remotely and it was not administered -> so people who were remotely assesed do not have a score in pattern T2
+-In T_2 follow-up assessment it was not possible to administer NIH Toolbox Pattern Comparison Processing Speed task remotely and it was not administered -> so people who were remotely assesed do not have a score in pattern T2
 
 
 # Data cleaning steps/notes (data_cleaning script)
 
-1. Only 3 tests had raw scores available, so checked for the within test correlations between raw and uncorrected (the 2 types that ABCD recommends) at T_1.
-results: picture: 0.97, pattern: 0.99, flanker: 0.35 
+1. Only 3 tests had raw scores available, so checked for the (within task) correlations between raw and uncorrected (the 2 types that ABCD recommends) at T_1.
+results: picture: 0.97, pattern: 0.99, flanker: 0.35
 
+2. NDAR_INVA31C7WYJ was an outlier (180) in T_2 reading, but the rest of their scores looked normal, so I replaced with NA. 
 
-3. Compared 3 wm tasks (tfmri_nb_all_beh_ctotal_rate(=rate of correct responses), tfmri_nb_all_beh_c0b_mrt (=Average reaction time for all correct responses to 0 back stimuli during run 1 and run 2), tfmri_nb_all_beh_c2b_mrt (=Average reaction time for all correct responses to 2 back stimuli during run 1 and run 2) to List from NIHtb and ravens matrices and the highest correlations were between rate of correct response for both list and ravens, (0.36 for T_1), so this measure was selected.
-   
-4. NDAR_INVA31C7WYJ was an outlier (180) in T_2 reading, but the rest of their scores looked normal, so I replaced with NA. 
+3. Compared 3 wm tasks (tfmri_nb_all_beh_ctotal_rate(=rate of correct responses), tfmri_nb_all_beh_c0b_mrt (=Average reaction time for all correct responses to 0 back stimuli during run 1 and run 2), tfmri_nb_all_beh_c2b_mrt (=Average reaction time for all correct responses to 2 back stimuli during run 1 and run 2) to List from NIHtb and ravens matrices (WISC) and the highest correlations were between rate of correct response for both list and ravens, (0.36 for T_1), so this measure was selected.
+
+4. Scaled the working memory values to make them more similar to the rest of the test scores. 
+
+5. Added visit type: 1 = in-person, 2 = remote, 3 = hybrid . 
 
 
 # Model specifiication and fit (basis_vs_linear script):
