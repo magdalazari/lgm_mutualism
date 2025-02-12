@@ -71,7 +71,7 @@ b. predict() estimations extracted from a large model vs predict estimations ext
 
 # Trying a SAM approach 
 Instead of the standard SEM approach of estimating everything at the same time. SAM also provides information on the reliability of latent variables. 
-Chose the basis model without working memory and free error var for picture (estimated in a standard way, it gives error). When comparing estimation methods (SAM and standard), intercepts and int-slopes between domains were relatively conistent, while slopes differed. Signs were the same between estimation methods. 
+Chose the basis model without working memory and free error var for picture (estimated in a standard way, it gives error). Since MLR can't be used in SAM (yet?), I did not use it for the standard models either. When comparing estimation methods (SAM and standard), intercepts and int-slopes between domains were relatively conistent, while slopes differed. Signs were the same between estimation methods. 
 Largest differences between estimation methods (std-SAM): 
 flanker_intercept-pattern_intercept: 0.63  0.49,
 flanker_slope-picture_slope:     0.23  0.04,
