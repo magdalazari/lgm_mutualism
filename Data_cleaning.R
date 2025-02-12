@@ -435,7 +435,7 @@ cor(cor_reaction_time_2_matrices, use='pairwise.complete.obs')
 
 #results: 0.08 between MATRICES and reaction time 2 back 
 
-##################################################
+### Chose rate of correct responses ###
 
 # multiplying so that absolute values are not as small 
 
@@ -514,7 +514,6 @@ uncorrected_wm_visit<-
   left_join(uncorrected_wm, visit_type, by=join_by('src_subject_id','eventname'))
 
 
-
 #### Renaming and reordering final  
 
 #reordering columns 
@@ -533,8 +532,3 @@ colnames(uncorrected_wm_visit_wide)<-c("ID","visit_T1", "picvocab_T1", "flanker_
 
 saveRDS(uncorrected_wm_visit, file = "uncorrected_wm_visit.rds")
 saveRDS(uncorrected_wm_visit_wide, file = "uncorrected_wm_visit_wide.rds")
-
-
-
-
-

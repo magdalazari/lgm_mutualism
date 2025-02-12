@@ -400,6 +400,7 @@ approach_B4<-as.vector(lavInspect(fit_no_wmpat, what='std')$psi)[lower.tri(lavIn
 #It is 0.5 (decreased)
 cor(approach_A4, approach_B4)
 
+
 ##### Comparing Standard SEM approach estimates to SAM approach estimates 
 
 
