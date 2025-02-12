@@ -46,32 +46,28 @@ results: picture: 0.97, pattern: 0.99, flanker: 0.35
 
 # Model specifiication and fit (basis_vs_linear script):
 
-1. Specified a linear and basis model for each cognitive domain seperately to select ideal (first just an intercept and slope, free err var).
+1. Specified a linear and basis model for each cognitive domain seperately to select ideal (first just an intercept and slope, constrained err var: Having only 3 timepoints means that the basis model has 0 degrees of freedom, making it saturated/just-identified. To make model comparison possible, we constrained the residual error variances within each domain for both linear and basis (*a for the 3 timepoints) ("growth" by default uniquely estimates each one) and got 2 df more).
 
-2. Basis was better for all except Picture Seq Memory. 
+2. Basis was better for all except Picture Seq Memory. Compared linear and basis again after freeing error var and basis was better. 
 
-3. Having only 3 timepoints means that the basis model has 0 degrees of freedom, making it saturated/just-identified. To make model comparison possible, we constrained the residual error variances within each domain for both linear and basis (*a for the 3 timepoints) ("growth" by default uniquely estimates each one) and got 2 df more.
+3. Due to negative value in the v-cov of working memory (H case, the standardized covariance between int and slope was below -1) also freed error variance.
 
-4. Compared Picture seq linear and basis again with freed error var and basis was better. 
+4. Anova() showed that basis was better for all of the domains (free error var for 2/6 domains), so worked with: 6 domains, all basis models, all error variances fixed except for working memory and picture. 
 
-5. Due to negative value in the v-cov of working memory (H case, the standardized covariance between int and slope was below -1), a. rescaled (*100) b.freed error variance.
-
-6. Anova() showed that basis was better for all of the domains (free error var for 2/6 domains), so worked with: 6 domains, all basis models, all error variances fixed except for working memory and picture. 
-
-8. Used predict() to extract intercept and slope estimates for each participant for each cognitive domain/model seperately, joined them into a data frame and correlated them (int-int, sl-sl, int-sl between tasks). Result: very low correlations between slopes, higher between intercepts. Using just picvocab to test, the predicted slopes of a linear model correlated .99 with the basis. To better understand what is happening, since we expected higher (slope) correlations, we compared the basis model (with constrained error var) to a basis model that in addition had the slope variance fixed to 0 (testing for interindividual differences in the slope). Anova() showed that the one with the freely estimated slope variance was better for all domains, so the slopes interindividual diff were meaningful.
+5. Used predict() to extract intercept and slope estimates for each participant for each cognitive domain/model seperately, joined them into a data frame and correlated them (int-int, sl-sl, int-sl between tasks). Result: very low correlations between slopes, higher between intercepts. Using just picvocab to test if this changes for linear vs basis models, the predicted slopes of a linear model correlated .99 with the basis. To better understand what is happening, since we expected higher (slope) correlations, we compared the basis model (for all cognitive domains) (with constrained error var) to a basis model that in addition had the slope variance fixed to 0 (testing for interindividual differences in the slope). Anova() showed that the one with the freely estimated slope variance was better for all domains, so the slopes interindividual diff were meaningful.
    
 # Combining individual domain models in one, 6 domain model (large_model script)
 
-1) Covariance matrix is not positive in a model with all 6 domains (basis, free er var for wm and picture). Removing picture/pattern/working memory on their own still gives error, but a model without working memory and pattern does not give warnings. Slope correlations are higher when error var is freed, but negative v-cov matrix (in a model without wm and pattern). 
+1) Covariance matrix is not positive in a model with all 6 domains (basis, free er var for wm and picture). Removing picture/pattern/working memory on their own still gives error, but a model without working memory and pattern does not give warnings. In this model, slope correlations are higher when error var is freed, but negative v-cov matrix. 
 
-2) In the model without wm and pattern, noticed that lavaan std.all and predict() correlations are very different, esp for slopes. So we checked:
-a. whether this difference was caused by missing cases/different estimation methods (troubleshooting script): fit linear and basis models for Reading and Picvocab, keeping only complete cases. Compared the std.all estimations to the individual predict estimations (basis_vs_linear script) and they were still different.
-b. predict() estimations extracted from a large model vs predict estimations extracted from each domains model, individually. In the 6 domain model, large model predicts correlated with lavaan 0.69 and in the 4 domain (-wm and pattern) they correlated 0.93. When the predict() estimations were extracted for each domain seperately, for the 6 domain model approach A and B correlated 0.57, for a model without wm they correlated 0.65 and for a model without wm and pattern, 0.5. 
-(predict()=approach A, lavaan=approach B) 
+2) In the model without wm and pattern, noticed that lavaan std.all and predict() (not estimated for individual domains, but for a model containing the 4 domains) correlations are very different, esp for slopes. So we checked:
+a. whether this difference was caused by missing cases/different estimation methods (troubleshooting script): fit linear and basis models for Reading and Picvocab, keeping only complete cases. Compared the std.all estimations to the individual predict estimations (from basis_vs_linear script) and they were still different.
+b. predict() estimations extracted from a large model vs predict estimations extracted from each domain's model, individually. In the 6 domain model, large model predict correlated with lavaan (std.all) 0.69 and in the 4 domain (-wm and pattern) they correlated 0.93. When the predict() was estimated individually for each domain, for the 6 domain model approach A and B correlated 0.57, for a model without wm they correlated 0.65 and for a model without wm and pattern, 0.5. 
+(approach A=predict(), approach B=lavaan) 
 
-# Trying a SAM approach (structure after measurement, SAM_model script)
-instead of estimating everything at the same time, like in the standard SEM approach. SAM provides information on the reliability of latent variables. 
-Chose the basis model without working memory and free error var for picture. When comparing estimation methods, intercepts and int-slopes between domains were relatively conistent, while slopes differed, signs were the same between estimation methods. 
+# Trying a SAM approach 
+Instead of the standard SEM approach of estimating everything at the same time. SAM also provides information on the reliability of latent variables. 
+Chose the basis model without working memory and free error var for picture (estimated in a standard way, it gives error). When comparing estimation methods (SAM and standard), intercepts and int-slopes between domains were relatively conistent, while slopes differed. Signs were the same between estimation methods. 
 Largest differences between estimation methods (std-SAM): 
 flanker_intercept-pattern_intercept: 0.63  0.49,
 flanker_slope-picture_slope:     0.23  0.04,
@@ -82,11 +78,11 @@ picvocab_slope-picture_slope:   0.61  0.13,
 picture_intercept-picture_slope: -0.09 -0.41,
 pattern_intercept-pattern_slope:  -0.13 -0.40
 
-
-At some point tried a model with correlated error variances within time points (picvocab_T1~~flanker_T1) but there are better ways to approach it probably.
+# Random
+At some point tried a model with correlated error variances within time points (picvocab_T1~~flanker_T1) but there are probably better ways to approach it, not very valid. It could also be capturing just the noise. 
 
  ###########################################################
  Before selecting A and B, I tried:
- -the Little man task was also administered in baseline, 2nd and 4th year, but: when administered in the baseline assessment a customized program designed by ABCD was used, whereas in (all) the 2-year and 4-year follow-up assessments a task presented in the Inquisit system from Millisecond was used. Testing: not great correlation between timepoints, esp 1-2 (.016), but 1-3 was good (.47). Generally weird to plot.
+ -the Little man task was also administered in baseline, 2nd and 4th year, but: when administered in the baseline assessment a customized program designed by ABCD was used, whereas in the 2-year and 4-year follow-up assessments (for all 3 visit types) a task presented in the Inquisit system from Millisecond was used. Testing: not great correlation between timepoints, esp 1-2 (.016), but 1-3 was good (.47). Generally weird to plot.
 
 
