@@ -27,7 +27,7 @@ Notes on tasks:
 4. Low correlations between raw and uncorrected Flanker: Raw scores represent just accuracy, uncorrected include rt for people scoring more than 80% (to manage ceiling eff), mentioned in manual and obvious when plotted, since 80% of 40 trials = 32 correct responses.
 If 20 correct responses are "guaranteed" (not included in the raw score) the remaining 12 (32 - 20) becomes the point at which the uncorrected score starts incorporating reaction times for accuracy higher than 80%, as participants have a baseline of 20 correct answers, so achieving 80% accuracy (32 correct) requires 12 additional correct responses, and this cutoff reflects on the graph, where 12 on the raw score axis aligns with the transition where reaction time likely starts influencing scores, Once you achieve the 12 additional correct answers (so hit 80% accuracy), reaction times start being factored into the score (which adds new types of variation).
 
--In T_2 follow-up assessment it was not possible to administer NIH Toolbox Pattern Comparison Processing Speed task remotely and it was not administered -> so people who were remotely assesed do not have a score in pattern T2
+5. In T_2 follow-up assessment it was not possible to administer NIH Toolbox Pattern Comparison Processing Speed task remotely and it was not administered -> so people who were remotely assesed do not have a score in pattern T2
 
 
 # Data cleaning steps/notes (data_cleaning script)
